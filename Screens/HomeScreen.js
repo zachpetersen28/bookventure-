@@ -97,17 +97,8 @@ export default function HomeScreen() {
     const loadedMemberships = memberData || [];
     setMemberships(loadedMemberships);
 
-    console.log(
-      'MEMBERSHIPS',
-      loadedMemberships.map((m) => ({
-        clubId: m.club_id,
-        name: m.name,
-      }))
-    );
-
     if (loadedMemberships.length === 0) {
       setClubs([]);
-      Alert.alert('Debug', 'Memberships: 0\nClubs: 0');
       setLoading(false);
       return;
     }
@@ -126,14 +117,6 @@ export default function HomeScreen() {
       return;
     }
 
-    console.log(
-      'CLUBS',
-      (clubData || []).map((c) => ({
-        id: c.id,
-        name: c.name,
-      }))
-    );
-
     setClubs(clubData || []);
 
     setLoading(false);
@@ -151,15 +134,16 @@ export default function HomeScreen() {
 
   const hasReadToday = useMemo(() => {
     const today = getTodayString();
-    return memberships.some((member) => member.last_read_date === today);
-  }, [memberships]);
+    return profile?.last_read_date === today;
+  }, [profile]);
+
+  const currentStreak = useMemo(() => {
+    return Number(profile?.current_streak || 0);
+  }, [profile]);
 
   const bestStreak = useMemo(() => {
-    return memberships.reduce(
-      (max, member) => Math.max(max, Number(member.streak || 0)),
-      0
-    );
-  }, [memberships]);
+    return Number(profile?.best_streak || 0);
+  }, [profile]);
 
   const totalChaptersRead = useMemo(() => {
     return memberships.reduce(
@@ -174,35 +158,35 @@ export default function HomeScreen() {
       return;
     }
 
-    if (memberships.length === 0) {
-      Alert.alert('No clubs yet', 'Join or create a club before tracking a streak.');
-      return;
-    }
-
     if (hasReadToday) return;
 
     const today = getTodayString();
     setMarkingRead(true);
 
-    const updates = memberships.map(async (member) => {
-      const newStreak = Number(member.streak || 0) + 1;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const year = yesterday.getFullYear();
+    const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+    const day = String(yesterday.getDate()).padStart(2, '0');
+    const yesterdayString = `${year}-${month}-${day}`;
 
-      return supabase
-        .from('members')
-        .update({
-          streak: newStreak,
-          last_read_date: today,
-        })
-        .eq('id', member.id);
-    });
+    const continuingStreak = profile.last_read_date === yesterdayString;
+    const newStreak = continuingStreak ? Number(profile.current_streak || 0) + 1 : 1;
+    const newBestStreak = Math.max(newStreak, Number(profile.best_streak || 0));
 
-    const results = await Promise.all(updates);
-    const failed = results.find((result) => result.error);
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        current_streak: newStreak,
+        best_streak: newBestStreak,
+        last_read_date: today,
+      })
+      .eq('id', profile.id);
 
     setMarkingRead(false);
 
-    if (failed?.error) {
-      Alert.alert('Streak error', failed.error.message);
+    if (error) {
+      Alert.alert('Streak error', error.message);
       return;
     }
 
@@ -378,8 +362,8 @@ export default function HomeScreen() {
 
             <View style={styles.streakBadge}>
               <View style={styles.streakInlineRow}>
-                <Text style={styles.streakEmoji}>{getStreakEmoji(bestStreak)}</Text>
-                <Text style={styles.streakNumber}>{bestStreak}</Text>
+                <Text style={styles.streakEmoji}>{getStreakEmoji(currentStreak)}</Text>
+                <Text style={styles.streakNumber}>{currentStreak}</Text>
               </View>
               <Text style={styles.streakLabel}>DAY STREAK</Text>
             </View>
