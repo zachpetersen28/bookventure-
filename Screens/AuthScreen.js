@@ -5,6 +5,9 @@ import {
     ActivityIndicator,
     Alert,
     Image,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -119,89 +122,98 @@ export default function AuthScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoWrap}>
-        <Image
-          source={require('../assets/bookventure-logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+    <KeyboardAvoidingView
+      style={styles.keyboardView}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.logoWrap}>
+          <Image
+            source={require('../assets/bookventure-logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
 
-        <Text style={styles.title}>Bookventure</Text>
+          <Text style={styles.title}>Bookventure</Text>
 
-        <Text style={styles.tagline}>Every book is a shared adventure.</Text>
-      </View>
+          <Text style={styles.tagline}>Every book is a shared adventure.</Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>
-          {mode === 'login' ? 'Welcome back' : 'Create your account'}
-        </Text>
-
-        <Text style={styles.cardSubtitle}>
-          {mode === 'login'
-            ? 'Log in to continue your reading journey.'
-            : 'Choose your display name and start your adventure.'}
-        </Text>
-
-        {mode === 'signup' && (
-          <>
-            <Text style={styles.label}>Display Name</Text>
-            <TextInput
-              value={displayName}
-              onChangeText={setDisplayName}
-              placeholder="Example: Zach"
-              placeholderTextColor={COLORS.muted}
-              style={styles.input}
-            />
-          </>
-        )}
-
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          placeholder="you@example.com"
-          placeholderTextColor={COLORS.muted}
-          style={styles.input}
-        />
-
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          placeholder="Password"
-          placeholderTextColor={COLORS.muted}
-          style={styles.input}
-        />
-
-        <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleAuth}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
-            {loading
-              ? 'Please wait...'
-              : mode === 'login'
-                ? 'Log In'
-                : 'Sign Up'}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            {mode === 'login' ? 'Welcome back' : 'Create your account'}
           </Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => setMode(mode === 'login' ? 'signup' : 'login')}
-        >
-          <Text style={styles.switchText}>
+          <Text style={styles.cardSubtitle}>
             {mode === 'login'
-              ? 'Need an account? Sign up'
-              : 'Already have an account? Log in'}
+              ? 'Log in to continue your reading journey.'
+              : 'Choose your display name and start your adventure.'}
           </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+
+          {mode === 'signup' && (
+            <>
+              <Text style={styles.label}>Display Name</Text>
+              <TextInput
+                value={displayName}
+                onChangeText={setDisplayName}
+                placeholder="Example: Zach"
+                placeholderTextColor={COLORS.muted}
+                style={styles.input}
+              />
+            </>
+          )}
+
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            placeholder="you@example.com"
+            placeholderTextColor={COLORS.muted}
+            style={styles.input}
+          />
+
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholder="Password"
+            placeholderTextColor={COLORS.muted}
+            style={styles.input}
+          />
+
+          <TouchableOpacity
+            style={[styles.button, loading && styles.buttonDisabled]}
+            onPress={handleAuth}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading
+                ? 'Please wait...'
+                : mode === 'login'
+                  ? 'Log In'
+                  : 'Sign Up'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setMode(mode === 'login' ? 'signup' : 'login')}
+          >
+            <Text style={styles.switchText}>
+              {mode === 'login'
+                ? 'Need an account? Sign up'
+                : 'Already have an account? Log in'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -213,9 +225,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  container: {
+  keyboardView: {
     flex: 1,
     backgroundColor: COLORS.cream,
+  },
+
+  content: {
+    flexGrow: 1,
     padding: 20,
     justifyContent: 'center',
   },
