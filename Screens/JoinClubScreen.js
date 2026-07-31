@@ -215,10 +215,10 @@ export default function JoinClubScreen() {
     const { error } = await supabase.from('members').insert([
       {
         club_id: club.id,
+        user_id: profile.id,
         name: profile.display_name,
         role: 'member',
         current_chapter: 0,
-        streak: 0,
       },
     ]);
 

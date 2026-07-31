@@ -341,10 +341,10 @@ export default function CreateClubScreen() {
     const { error: memberError } = await supabase.from('members').insert([
       {
         club_id: clubData.id,
+        user_id: profile.id,
         name: profile.display_name,
         role: 'host',
         current_chapter: 0,
-        streak: 0,
       },
     ]);
 
