@@ -36,6 +36,7 @@ export default function ClubScreen() {
   const [profile, setProfile] = useState(null);
   const [clubSettings, setClubSettings] = useState(null);
   const [members, setMembers] = useState([]);
+  const [memberProfiles, setMemberProfiles] = useState({});
   const [messages, setMessages] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
 
@@ -176,8 +177,11 @@ export default function ClubScreen() {
   const votingOpen = votingHasStarted && !votingHasEnded;
 
   const sortedMembers = [...members].sort((a, b) => {
-    if (Number(b.streak || 0) !== Number(a.streak || 0)) {
-      return Number(b.streak || 0) - Number(a.streak || 0);
+    const aStreak = Number(memberProfiles[a.user_id]?.current_streak || 0);
+    const bStreak = Number(memberProfiles[b.user_id]?.current_streak || 0);
+
+    if (bStreak !== aStreak) {
+      return bStreak - aStreak;
     }
 
     return Number(b.current_chapter || 0) - Number(a.current_chapter || 0);
@@ -264,10 +268,6 @@ export default function ClubScreen() {
     return '🌱';
   };
 
-  const getBestStreak = (member) => {
-    return Number(member.best_streak || member.longest_streak || member.streak || 0);
-  };
-
   const loadProfileAndData = async () => {
     setLoading(true);
 
@@ -316,7 +316,34 @@ export default function ClubScreen() {
       return;
     }
 
-    setMembers(data || []);
+    const loadedMembers = data || [];
+    setMembers(loadedMembers);
+
+    const userIds = loadedMembers
+      .map((member) => member.user_id)
+      .filter((userId) => userId != null);
+
+    if (userIds.length === 0) {
+      setMemberProfiles({});
+      return;
+    }
+
+    const { data: profileRows, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .in('id', userIds);
+
+    if (profileError) {
+      Alert.alert('Error loading member profiles', profileError.message);
+      return;
+    }
+
+    const profilesByUserId = {};
+    (profileRows || []).forEach((profileRow) => {
+      profilesByUserId[profileRow.id] = profileRow;
+    });
+
+    setMemberProfiles(profilesByUserId);
   };
 
   const loadMessages = async () => {
@@ -836,6 +863,15 @@ await loadMembers();
         },
       },
     ]);
+  };
+
+  const openMemberProfile = (member) => {
+    if (!member.user_id) {
+      Alert.alert('Profile not available', "This member isn't linked to a profile yet.");
+      return;
+    }
+
+    router.push(`/member-profile?id=${member.user_id}`);
   };
 
   const openMemberActions = (member) => {
@@ -1706,11 +1742,15 @@ await loadMembers();
         {sortedMembers.map((member, index) => {
           const isCurrentUser = member.id === currentMember?.id;
           const memberPercent = total > 0 ? Math.round((Number(member.current_chapter || 0) / total) * 100) : 0;
+          const memberProfile = member.user_id ? memberProfiles[member.user_id] : null;
+          const memberCurrentStreak = Number(memberProfile?.current_streak || 0);
+          const memberBestStreak = Number(memberProfile?.best_streak || 0);
 
           return (
             <TouchableOpacity
               key={member.id}
               style={[styles.memberCard, isCurrentUser && styles.memberCardCurrent, index === 0 && styles.memberCardLeader]}
+              onPress={() => openMemberProfile(member)}
               onLongPress={() => openMemberActions(member)}
               activeOpacity={isHost && !isCurrentUser ? 0.82 : 1}
             >
@@ -1735,8 +1775,8 @@ await loadMembers();
               </View>
 
               <View style={styles.memberRightColumn}>
-                <Text style={styles.memberStreak}>{getStreakEmoji(member.streak)} {member.streak || 0}</Text>
-                <Text style={styles.memberBestStreak}>Best {getStreakEmoji(getBestStreak(member))} {getBestStreak(member)}</Text>
+                <Text style={styles.memberStreak}>{getStreakEmoji(memberCurrentStreak)} {memberCurrentStreak}</Text>
+                <Text style={styles.memberBestStreak}>Best {getStreakEmoji(memberBestStreak)} {memberBestStreak}</Text>
               </View>
             </TouchableOpacity>
           );
