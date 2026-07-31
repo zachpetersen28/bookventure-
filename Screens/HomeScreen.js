@@ -585,7 +585,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     marginLeft: 8,
-    marginTop: 20,
   },
 
   readTodayCard: {

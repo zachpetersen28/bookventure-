@@ -27,7 +27,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/theme';
+import { COLORS, FONTS } from '../lib/theme';
 
 export default function ClubScreen() {
   const router = useRouter();
@@ -1873,7 +1873,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   backButtonText: { color: COLORS.gold, fontSize: 28, fontWeight: '900', marginTop: -2 },
-  clubNameHeader: { color: COLORS.textPrimary, fontSize: 22, fontWeight: '900' },
+  clubNameHeader: { color: COLORS.textPrimary, fontSize: 22, fontFamily: FONTS.title },
   clubStatusHeader: { color: COLORS.textSecondary, marginTop: 2, fontWeight: '700' },
   rolePill: {
     backgroundColor: COLORS.gold,
