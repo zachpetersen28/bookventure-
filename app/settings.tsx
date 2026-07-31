@@ -8,8 +8,9 @@ import {
     View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
+import { COLORS } from '../lib/theme';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function SettingsScreen() {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Settings</Text>
+          <ScreenHeader title="Settings" />
 
           <View style={styles.card}>
             <TouchableOpacity style={styles.row} onPress={() => router.push('/edit-profile')}>
@@ -93,12 +94,6 @@ const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: COLORS.background },
   container: { flex: 1 },
   content: { paddingHorizontal: 18, paddingTop: 12, paddingBottom: 120 },
-  title: {
-    color: COLORS.textPrimary,
-    fontSize: 32,
-    fontFamily: FONTS.title,
-    marginBottom: 18,
-  },
   card: {
     backgroundColor: COLORS.card,
     borderWidth: 1,

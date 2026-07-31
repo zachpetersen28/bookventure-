@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../../lib/avatars';
+import ScreenHeader from '../../components/ScreenHeader';
 import { supabase } from '../../lib/supabase';
 import { COLORS, FONTS } from '../../lib/theme';
 
@@ -173,26 +174,17 @@ export default function ProfileScreen() {
           false
         }
       >
-        <View style={styles.topRow}>
-          <Text style={styles.pageTitle}>
-            Profile
-          </Text>
-
-          <TouchableOpacity
-            style={styles.settingsButton}
-            onPress={() =>
-              router.push('/settings')
-            }
-          >
-            <Text
-              style={
-                styles.settingsIcon
-              }
+        <ScreenHeader
+          title="Profile"
+          rightAction={
+            <TouchableOpacity
+              style={styles.settingsButton}
+              onPress={() => router.push('/settings')}
             >
-              ⚙️
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Text style={styles.settingsIcon}>⚙️</Text>
+            </TouchableOpacity>
+          }
+        />
 
         <View style={styles.headerCard}>
           <View style={styles.avatar}>
@@ -389,22 +381,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 8,
     paddingBottom: 120,
-  },
-
-  topRow: {
-    flexDirection: 'row',
-    justifyContent:
-      'space-between',
-    alignItems: 'center',
-    marginBottom: 14,
-  },
-
-  pageTitle: {
-    color:
-      COLORS.textPrimary,
-    fontSize: 32,
-    fontFamily:
-      FONTS.title,
   },
 
   settingsButton: {

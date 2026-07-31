@@ -14,7 +14,8 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, FONTS } from '../../lib/theme';
+import ScreenHeader from '../../components/ScreenHeader';
+import { COLORS } from '../../lib/theme';
 
 type BookResult = {
   id: string;
@@ -308,26 +309,7 @@ export default function DiscoverScreen() {
             false
           }
         >
-          <View style={styles.header}>
-            <Image
-              source={require('../../assets/bookventure-logo.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-
-            <View>
-              <Text style={styles.title}>
-                Discover
-              </Text>
-
-              <Text
-                style={styles.subtitle}
-              >
-                Find your next
-                adventure.
-              </Text>
-            </View>
-          </View>
+          <ScreenHeader title="Discover" subtitle="Find your next adventure." />
 
           <View style={styles.searchCard}>
             <View
@@ -573,32 +555,6 @@ const styles = StyleSheet.create({
       COLORS.background,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 14,
-  },
-
-  logo: {
-    width: 58,
-    height: 58,
-    marginRight: 12,
-  },
-
-  title: {
-    fontSize: 30,
-    fontFamily:
-      FONTS.title,
-    color:
-      COLORS.textPrimary,
-  },
-
-  subtitle: {
-    color: COLORS.gold,
-    fontWeight: '800',
-    marginTop: -3,
   },
 
   searchCard: {

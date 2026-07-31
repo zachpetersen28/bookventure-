@@ -15,8 +15,9 @@ import {
     View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
+import { COLORS } from '../lib/theme';
 
 export default function JoinClubScreen() {
   const router = useRouter();
@@ -261,18 +262,7 @@ export default function JoinClubScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.headerRow}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.title}>Find Clubs</Text>
-              
-            </View>
-
-            <Image
-              source={require('../assets/bookventure-logo.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-          </View>
+          <ScreenHeader title="Find Clubs" />
 
           <View style={styles.searchOnlyWrap}>
             <TextInput
@@ -424,29 +414,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingText: { color: COLORS.textSecondary, marginTop: 12, fontWeight: '800' },
-
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    color: COLORS.textPrimary,
-    fontSize: 32,
-    fontFamily: FONTS?.title,
-    fontWeight: '900',
-  },
-  subtitle: {
-    color: COLORS.gold,
-    marginTop: 4,
-    fontWeight: '800',
-    lineHeight: 19,
-  },
-  logo: {
-    width: 64,
-    height: 64,
-    marginLeft: 12,
-  },
 
   searchOnlyWrap: {
     marginBottom: 2,

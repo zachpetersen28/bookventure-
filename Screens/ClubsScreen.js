@@ -13,8 +13,9 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
+import { COLORS } from '../lib/theme';
 
 export default function ClubsScreen() {
   const router = useRouter();
@@ -191,22 +192,10 @@ export default function ClubsScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <View style={styles.brandRow}>
-            <Image
-              source={require('../assets/bookventure-logo.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-
-            <View>
-              <Text style={styles.screenTitle}>Clubs</Text>
-              <Text style={styles.subtitle}>
-                {clubs.length} {clubs.length === 1 ? 'club' : 'clubs'}
-              </Text>
-            </View>
-          </View>
-        </View>
+        <ScreenHeader
+          title="Clubs"
+          subtitle={`${clubs.length} ${clubs.length === 1 ? 'club' : 'clubs'}`}
+        />
 
         <View style={styles.actionCard}>
           <View style={{ flex: 1 }}>
@@ -339,33 +328,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  header: {
-    marginBottom: 14,
-  },
-
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  logo: {
-    width: 58,
-    height: 58,
-    marginRight: 10,
-  },
-
-  screenTitle: {
-    fontSize: 30,
-    fontFamily: FONTS.title,
-    color: COLORS.textPrimary,
-  },
-
-  subtitle: {
-    color: COLORS.gold,
-    fontWeight: '800',
-    marginTop: -3,
   },
 
   actionCard: {

@@ -12,8 +12,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../lib/avatars';
+import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
+import { COLORS } from '../lib/theme';
 
 const MAX_GENRES = 5;
 
@@ -201,9 +202,7 @@ export default function EditProfileScreen() {
             styles.content
           }
         >
-          <Text style={styles.title}>
-            Edit Profile
-          </Text>
+          <ScreenHeader title="Edit Profile" />
 
           <View style={styles.card}>
             <Text style={styles.label}>
@@ -437,15 +436,6 @@ const styles = StyleSheet.create({
   content: {
     padding: 18,
     paddingBottom: 120,
-  },
-
-  title: {
-    fontSize: 32,
-    color:
-      COLORS.textPrimary,
-    fontFamily:
-      FONTS.title,
-    marginBottom: 18,
   },
 
   card: {

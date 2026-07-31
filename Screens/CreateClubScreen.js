@@ -1,4 +1,3 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
@@ -6,6 +5,7 @@ import {
   Alert,
   Image,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -15,8 +15,29 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Calendar } from 'react-native-calendars';
+import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
 import { COLORS, FONTS } from '../lib/theme';
+
+const calendarTheme = {
+  backgroundColor: COLORS.surface,
+  calendarBackground: COLORS.surface,
+  textSectionTitleColor: COLORS.textSecondary,
+  selectedDayBackgroundColor: COLORS.gold,
+  selectedDayTextColor: COLORS.deepForest,
+  todayTextColor: COLORS.gold,
+  dayTextColor: COLORS.textPrimary,
+  textDisabledColor: COLORS.textMuted,
+  arrowColor: COLORS.gold,
+  monthTextColor: COLORS.textPrimary,
+  textMonthFontFamily: FONTS.title,
+  textDayFontWeight: '700',
+  textDayHeaderFontWeight: '900',
+  textMonthFontSize: 18,
+  textDayFontSize: 15,
+  textDayHeaderFontSize: 12,
+};
 
 export default function CreateClubScreen() {
   const router = useRouter();
@@ -373,8 +394,7 @@ export default function CreateClubScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Create Club</Text>
-          <Text style={styles.subtitle}>Start a new Bookventure club.</Text>
+          <ScreenHeader title="Create Club" subtitle="Start a new Bookventure club." />
 
           <Text style={styles.label}>Club Name</Text>
           <TextInput
@@ -635,7 +655,12 @@ export default function CreateClubScreen() {
           </TouchableOpacity>
         </ScrollView>
 
-        {activeDatePicker && (
+        <Modal
+          visible={Boolean(activeDatePicker)}
+          transparent
+          animationType="slide"
+          onRequestClose={closeDatePicker}
+        >
           <View style={styles.dateOverlay}>
             <View style={styles.datePanel}>
               <View style={styles.datePanelHeader}>
@@ -646,42 +671,26 @@ export default function CreateClubScreen() {
               </View>
 
               <View style={styles.datePickerWrap}>
-                <DateTimePicker
-                  value={tempDate}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'calendar'}
-                  themeVariant="dark"
-                  textColor={COLORS.textPrimary}
-                  onChange={(event, selectedDate) => {
-                    if (Platform.OS === 'android') {
-                      if (event.type === 'dismissed') {
-                        closeDatePicker();
-                        return;
-                      }
-
-                      if (selectedDate) {
-                        if (activeDatePicker === 'votingStart') setVotingStartDate(selectedDate);
-                        if (activeDatePicker === 'votingEnd') setVotingEndDate(selectedDate);
-                        if (activeDatePicker === 'goalFinish') setGoalFinishDate(selectedDate);
-                      }
-
-                      closeDatePicker();
-                      return;
-                    }
-
-                    if (selectedDate) setTempDate(selectedDate);
+                <Calendar
+                  current={formatDateForSupabase(tempDate)}
+                  onDayPress={(day) => setTempDate(new Date(`${day.dateString}T00:00:00`))}
+                  markedDates={{
+                    [formatDateForSupabase(tempDate)]: {
+                      selected: true,
+                      selectedColor: COLORS.gold,
+                      selectedTextColor: COLORS.deepForest,
+                    },
                   }}
+                  theme={calendarTheme}
                 />
               </View>
 
-              {Platform.OS === 'ios' && (
-                <TouchableOpacity style={styles.dateSaveButton} onPress={saveDatePicker}>
-                  <Text style={styles.dateSaveButtonText}>Save Date</Text>
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity style={styles.dateSaveButton} onPress={saveDatePicker}>
+                <Text style={styles.dateSaveButtonText}>Save Date</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        )}
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -692,20 +701,6 @@ const styles = StyleSheet.create({
   keyboardView: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
-
-  title: {
-    fontSize: 32,
-    fontFamily: FONTS?.title,
-    fontWeight: '900',
-    color: COLORS.textPrimary,
-  },
-
-  subtitle: {
-    color: COLORS.gold,
-    marginTop: 4,
-    marginBottom: 16,
-    fontWeight: '800',
-  },
 
   sectionTitle: {
     color: COLORS.textPrimary,
@@ -1081,7 +1076,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.softBorder,
     overflow: 'hidden',
-    alignItems: 'center',
   },
 
   dateSaveButton: {

@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../lib/avatars';
+import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
+import { COLORS } from '../lib/theme';
 
 const NEUTRAL_AVATAR_EMOJI = '👤';
 
@@ -112,18 +113,21 @@ export default function MemberProfileScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView style={styles.page}>
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
-            <Text style={styles.closeButtonText}>✕</Text>
-          </TouchableOpacity>
+          <View style={styles.headerWrap}>
+            <ScreenHeader
+              title={profile.display_name || 'Reader'}
+              subtitle={profile.created_at ? formatMemberSince(profile.created_at) : undefined}
+              rightAction={
+                <TouchableOpacity onPress={() => router.back()}>
+                  <Text style={styles.closeButtonText}>✕</Text>
+                </TouchableOpacity>
+              }
+            />
+          </View>
 
           <View style={styles.avatarWrap}>
             <Text style={styles.avatarEmoji}>{getAvatarEmoji(profile.avatar_id)}</Text>
           </View>
-
-          <Text style={styles.displayName}>{profile.display_name || 'Reader'}</Text>
-          {profile.created_at ? (
-            <Text style={styles.memberSince}>{formatMemberSince(profile.created_at)}</Text>
-          ) : null}
 
           {profile.bio ? (
             <View style={styles.card}>
@@ -181,8 +185,8 @@ const styles = StyleSheet.create({
   },
   content: { padding: 18, paddingBottom: 120, alignItems: 'center' },
 
-  closeButton: { alignSelf: 'flex-end' },
   closeButtonText: { color: COLORS.textSecondary, fontSize: 20, fontWeight: '900' },
+  headerWrap: { width: '100%' },
 
   avatarWrap: {
     width: 110,
@@ -196,19 +200,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   avatarEmoji: { fontSize: 52 },
-
-  displayName: {
-    color: COLORS.textPrimary,
-    fontSize: 26,
-    fontFamily: FONTS.title,
-    marginTop: 14,
-    textAlign: 'center',
-  },
-  memberSince: {
-    color: COLORS.textSecondary,
-    fontWeight: '800',
-    marginTop: 4,
-  },
 
   card: {
     width: '100%',
