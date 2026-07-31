@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
+    ActivityIndicator,
     Alert,
     ScrollView,
     StyleSheet,
@@ -8,7 +9,10 @@ import {
     TextInput,
     TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
+import { COLORS } from '../lib/theme';
 
 export default function EditClubScreen() {
   const router = useRouter();
@@ -177,167 +181,182 @@ export default function EditClubScreen() {
 
   if (loading) {
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text>Loading host settings...</Text>
-      </ScrollView>
+      <SafeAreaView style={styles.loadingPage} edges={['top']}>
+        <ActivityIndicator size="large" color={COLORS.gold} />
+      </SafeAreaView>
     );
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Host Settings</Text>
-      <Text style={styles.subtitle}>
-        {profile ? `Editing as ${profile.display_name}` : ''}
-      </Text>
+    <SafeAreaView style={styles.page} edges={['top']}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <ScreenHeader
+          title="Edit Club"
+          subtitle={profile ? `Editing as ${profile.display_name}` : undefined}
+          onBack={() => router.back()}
+        />
 
-      <Text style={styles.label}>Club Name</Text>
-      <TextInput
-        value={clubName}
-        onChangeText={setClubName}
-        style={styles.input}
-      />
+        <Text style={styles.label}>Club Name</Text>
+        <TextInput
+          value={clubName}
+          onChangeText={setClubName}
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Current Book</Text>
-      <TextInput
-        value={bookName}
-        onChangeText={setBookName}
-        style={styles.input}
-      />
+        <Text style={styles.label}>Current Book</Text>
+        <TextInput
+          value={bookName}
+          onChangeText={setBookName}
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Total Chapters</Text>
-      <TextInput
-        value={totalChapters}
-        onChangeText={setTotalChapters}
-        keyboardType="numeric"
-        style={styles.input}
-      />
+        <Text style={styles.label}>Total Chapters</Text>
+        <TextInput
+          value={totalChapters}
+          onChangeText={setTotalChapters}
+          keyboardType="numeric"
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Total Pages</Text>
-      <TextInput
-        value={totalPages}
-        onChangeText={setTotalPages}
-        keyboardType="numeric"
-        placeholder="Example: 320"
-        style={styles.input}
-      />
+        <Text style={styles.label}>Total Pages</Text>
+        <TextInput
+          value={totalPages}
+          onChangeText={setTotalPages}
+          keyboardType="numeric"
+          placeholder="Example: 320"
+          placeholderTextColor={COLORS.textMuted}
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Goal Finish Date</Text>
-      <TextInput
-        value={goalFinishDate}
-        onChangeText={setGoalFinishDate}
-        placeholder="YYYY-MM-DD"
-        style={styles.input}
-      />
+        <Text style={styles.label}>Goal Finish Date</Text>
+        <TextInput
+          value={goalFinishDate}
+          onChangeText={setGoalFinishDate}
+          placeholder="YYYY-MM-DD"
+          placeholderTextColor={COLORS.textMuted}
+          style={styles.input}
+        />
 
-      {schedule && (
-        <Text style={styles.scheduleText}>
-          Suggested pace: {schedule.pagesPerDay} pages/day and{' '}
-          {schedule.chaptersPerWeek} chapters/week.
+        {schedule && (
+          <Text style={styles.scheduleText}>
+            Suggested pace: {schedule.pagesPerDay} pages/day and{' '}
+            {schedule.chaptersPerWeek} chapters/week.
+          </Text>
+        )}
+
+        <Text style={styles.label}>Max Members</Text>
+        <TextInput
+          value={maxMembers}
+          onChangeText={setMaxMembers}
+          keyboardType="numeric"
+          style={styles.input}
+        />
+
+        <TouchableOpacity
+          style={[styles.toggleButton, lockAfterVoting && styles.toggleButtonOn]}
+          onPress={() => setLockAfterVoting(!lockAfterVoting)}
+        >
+          <Text style={[styles.toggleText, lockAfterVoting && styles.toggleTextOn]}>
+            {lockAfterVoting
+              ? 'Joining locks after voting/book starts: ON'
+              : 'Joining locks after voting/book starts: OFF'}
+          </Text>
+        </TouchableOpacity>
+
+        <Text style={styles.note}>
+          Group average is calculated automatically from member progress.
         </Text>
-      )}
 
-      <Text style={styles.label}>Max Members</Text>
-      <TextInput
-        value={maxMembers}
-        onChangeText={setMaxMembers}
-        keyboardType="numeric"
-        style={styles.input}
-      />
-
-      <TouchableOpacity
-        style={[styles.toggleButton, lockAfterVoting && styles.toggleButtonOn]}
-        onPress={() => setLockAfterVoting(!lockAfterVoting)}
-      >
-        <Text style={styles.toggleText}>
-          {lockAfterVoting
-            ? 'Joining locks after voting/book starts: ON'
-            : 'Joining locks after voting/book starts: OFF'}
-        </Text>
-      </TouchableOpacity>
-
-      <Text style={styles.note}>
-        Group average is calculated automatically from member progress.
-      </Text>
-
-      <TouchableOpacity style={styles.button} onPress={saveChanges}>
-        <Text style={styles.buttonText}>Save Host Settings</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity style={styles.button} onPress={saveChanges}>
+          <Text style={styles.buttonText}>Save Host Settings</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  page: { flex: 1, backgroundColor: COLORS.background },
+  loadingPage: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: { flex: 1 },
 
   content: {
     padding: 20,
     paddingBottom: 120,
   },
 
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
-
-  subtitle: {
-    color: '#555',
-    marginTop: 6,
-    marginBottom: 20,
-  },
-
   label: {
-    fontWeight: 'bold',
+    fontWeight: '900',
     marginTop: 15,
+    color: COLORS.textPrimary,
   },
 
   input: {
+    backgroundColor: COLORS.card,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
+    borderColor: COLORS.border,
+    borderRadius: 14,
+    padding: 12,
     marginTop: 6,
+    color: COLORS.textPrimary,
   },
 
   scheduleText: {
-    backgroundColor: '#f2f2f2',
-    padding: 10,
-    borderRadius: 8,
+    backgroundColor: COLORS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    color: COLORS.gold,
+    padding: 12,
+    borderRadius: 14,
     marginTop: 10,
-    fontWeight: 'bold',
+    fontWeight: '900',
   },
 
   toggleButton: {
-    backgroundColor: '#eee',
+    backgroundColor: COLORS.card,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 14,
     marginTop: 18,
   },
 
   toggleButtonOn: {
-    backgroundColor: '#dff3df',
+    backgroundColor: COLORS.gold,
+    borderColor: COLORS.gold,
   },
 
   toggleText: {
-    fontWeight: 'bold',
+    fontWeight: '900',
     textAlign: 'center',
+    color: COLORS.textPrimary,
+  },
+
+  toggleTextOn: {
+    color: COLORS.deepForest,
   },
 
   note: {
-    color: '#555',
+    color: COLORS.textSecondary,
     marginTop: 15,
     lineHeight: 20,
   },
 
   button: {
-    backgroundColor: '#4CAF50',
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: COLORS.gold,
+    padding: 14,
+    borderRadius: 16,
     marginTop: 25,
   },
 
   buttonText: {
-    color: 'white',
+    color: COLORS.deepForest,
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: '900',
   },
 });

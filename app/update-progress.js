@@ -9,6 +9,9 @@ import {
     TextInput,
     TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../components/ScreenHeader';
+import { COLORS } from '../lib/theme';
 
 export default function UpdateProgressPage() {
   const router = useRouter();
@@ -57,59 +60,60 @@ export default function UpdateProgressPage() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Update Progress</Text>
-      <Text style={styles.subtitle}>{params.name}</Text>
+    <SafeAreaView style={styles.page} edges={['top']}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <ScreenHeader title="Update Progress" subtitle={params.name} onBack={() => router.back()} />
 
-      <Text style={styles.label}>Your Current Chapter</Text>
-      <TextInput
-        value={current}
-        onChangeText={setCurrent}
-        keyboardType="numeric"
-        style={styles.input}
-      />
+        <Text style={styles.label}>Your Current Chapter</Text>
+        <TextInput
+          value={current}
+          onChangeText={setCurrent}
+          keyboardType="numeric"
+          style={styles.input}
+        />
 
-      <Text style={styles.helper}>Total chapters: {params.totalChapters}</Text>
+        <Text style={styles.helper}>Total chapters: {params.totalChapters}</Text>
 
-      <TouchableOpacity style={styles.button} onPress={saveProgress}>
-        <Text style={styles.buttonText}>Save Progress</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity style={styles.button} onPress={saveProgress}>
+          <Text style={styles.buttonText}>Save Progress</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  page: { flex: 1, backgroundColor: COLORS.background },
+  container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
 
-  title: { fontSize: 28, fontWeight: 'bold' },
-  subtitle: { color: '#555', marginTop: 6, marginBottom: 20 },
-
-  label: { fontWeight: 'bold', marginTop: 15 },
+  label: { fontWeight: '900', marginTop: 15, color: COLORS.textPrimary },
 
   input: {
+    backgroundColor: COLORS.card,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
+    borderColor: COLORS.border,
+    borderRadius: 14,
+    padding: 12,
     marginTop: 6,
+    color: COLORS.textPrimary,
   },
 
   helper: {
     marginTop: 8,
-    color: '#555',
+    color: COLORS.textSecondary,
   },
 
   button: {
-    backgroundColor: '#4CAF50',
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: COLORS.gold,
+    padding: 14,
+    borderRadius: 16,
     marginTop: 25,
   },
 
   buttonText: {
-    color: 'white',
+    color: COLORS.deepForest,
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: '900',
   },
 });
