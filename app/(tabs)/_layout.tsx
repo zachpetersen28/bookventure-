@@ -22,13 +22,7 @@ export default function TabsLayout() {
         tabBarActiveTintColor: COLORS.forest,
         tabBarInactiveTintColor: COLORS.muted,
 
-        tabBarStyle: {
-          height: 86,
-          paddingTop: 10,
-          paddingBottom: 22,
-          backgroundColor: '#FFFFFF',
-          borderTopColor: COLORS.border,
-        },
+        tabBarStyle: { display: 'none' },
 
         tabBarLabelStyle: {
           fontSize: 11,

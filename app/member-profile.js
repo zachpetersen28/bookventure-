@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: { padding: 18, paddingBottom: 60, alignItems: 'center' },
+  content: { padding: 18, paddingBottom: 120, alignItems: 'center' },
 
   closeButton: { alignSelf: 'flex-end' },
   closeButtonText: { color: COLORS.textSecondary, fontSize: 20, fontWeight: '900' },

@@ -80,7 +80,7 @@ export default function UpdateProgressPage() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  content: { padding: 20, paddingBottom: 50 },
+  content: { padding: 20, paddingBottom: 120 },
 
   title: { fontSize: 28, fontWeight: 'bold' },
   subtitle: { color: '#555', marginTop: 6, marginBottom: 20 },
