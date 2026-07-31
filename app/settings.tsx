@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import {
     Alert,
@@ -10,9 +11,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
+import { Theme } from '../lib/themes';
 
 export default function SettingsScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
 
   const logout = async () => {
@@ -90,14 +95,15 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+  page: { flex: 1, backgroundColor: theme.colors.background },
   container: { flex: 1 },
   content: { paddingHorizontal: 18, paddingTop: 12, paddingBottom: 120 },
   card: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     marginBottom: 14,
     overflow: 'hidden',
@@ -109,17 +115,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 18,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: theme.colors.border,
   },
   rowText: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 15,
     fontWeight: '800',
   },
-  arrow: { color: COLORS.gold, fontSize: 24, fontWeight: '700' },
-  comingSoon: { color: COLORS.textMuted, fontWeight: '800', fontSize: 12 },
+  arrow: { color: theme.colors.gold, fontSize: 24, fontWeight: '700' },
+  comingSoon: { color: theme.colors.textMuted, fontWeight: '800', fontSize: 12 },
   deleteCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
     borderColor: '#7A1D1D',
     borderRadius: 20,

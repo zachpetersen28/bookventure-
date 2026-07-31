@@ -1,6 +1,8 @@
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS, FONTS } from '../lib/theme';
+import { FONTS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
+import { Theme } from '../lib/themes';
 
 type ScreenHeaderProps = {
   title: string;
@@ -10,6 +12,9 @@ type ScreenHeaderProps = {
 };
 
 export default function ScreenHeader({ title, subtitle, onBack, rightAction }: ScreenHeaderProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   return (
     <View style={styles.row}>
       {onBack ? (
@@ -28,34 +33,35 @@ export default function ScreenHeader({ title, subtitle, onBack, rightAction }: S
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 18,
-  },
-  titleWrap: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 32,
-    fontFamily: FONTS.title,
-    color: COLORS.textPrimary,
-  },
-  subtitle: {
-    color: COLORS.gold,
-    fontWeight: '800',
-    marginTop: -3,
-  },
-  backButton: {
-    marginRight: 10,
-  },
-  backButtonText: {
-    color: COLORS.gold,
-    fontSize: 28,
-    fontWeight: '900',
-  },
-  rightAction: {
-    marginLeft: 10,
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 18,
+    },
+    titleWrap: {
+      flex: 1,
+    },
+    title: {
+      fontSize: 32,
+      fontFamily: FONTS.title,
+      color: theme.colors.textPrimary,
+    },
+    subtitle: {
+      color: theme.colors.gold,
+      fontWeight: '800',
+      marginTop: -3,
+    },
+    backButton: {
+      marginRight: 10,
+    },
+    backButtonText: {
+      color: theme.colors.gold,
+      fontSize: 28,
+      fontWeight: '900',
+    },
+    rightAction: {
+      marginLeft: 10,
+    },
+  });

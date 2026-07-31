@@ -19,13 +19,16 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
+import { FONTS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const FEATURED_CARD_WIDTH = SCREEN_WIDTH - 36;
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { theme, themeId, setThemeId, themes } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
 
   const [profile, setProfile] = useState(null);
   const [clubs, setClubs] = useState([]);
@@ -322,7 +325,7 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingPage} edges={['top']}>
-        <ActivityIndicator size="large" color={COLORS.gold} />
+        <ActivityIndicator size="large" color={theme.colors.gold} />
         <Text style={styles.loadingText}>Loading your dashboard...</Text>
       </SafeAreaView>
     );
@@ -335,9 +338,23 @@ export default function HomeScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.gold} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.colors.gold} />
         }
       >
+        {/* DEV ONLY — remove once the theme picker exists (Stage 4). Lets us
+            verify the theming pattern across all registered themes. */}
+        <View style={styles.devThemeRow}>
+          {themes.map((t) => (
+            <TouchableOpacity
+              key={t.id}
+              style={[styles.devThemeChip, t.id === themeId && styles.devThemeChipActive]}
+              onPress={() => setThemeId(t.id)}
+            >
+              <Text style={styles.devThemeChipText}>{t.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
         <View style={styles.headerRow}>
           <View style={{ flex: 1 }}>
             <Text style={styles.brandTitle} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
@@ -547,305 +564,330 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
-  loadingPage: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loadingText: { color: COLORS.textSecondary, marginTop: 12, fontWeight: '800' },
-  container: { flex: 1 },
-  content: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 120 },
+const getStyles = (theme) =>
+  StyleSheet.create({
+    page: { flex: 1, backgroundColor: theme.colors.background },
+    loadingPage: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    loadingText: { color: theme.colors.textSecondary, marginTop: 12, fontWeight: '800' },
+    container: { flex: 1 },
+    content: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 120 },
 
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
+    devThemeRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+      marginBottom: 14,
+    },
+    devThemeChip: {
+      backgroundColor: theme.colors.surface,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 999,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+    },
+    devThemeChipActive: {
+      borderColor: theme.colors.gold,
+      backgroundColor: theme.colors.card,
+    },
+    devThemeChipText: {
+      color: theme.colors.textSecondary,
+      fontSize: 11,
+      fontWeight: '800',
+    },
 
-  brandTitle: {
-    color: COLORS.textPrimary,
-    fontSize: 34,
-    fontFamily: FONTS.title,
-    marginTop: 2,
-    maxWidth: SCREEN_WIDTH - 104,
-  },
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 16,
+    },
 
-  welcomeText: {
-    color: COLORS.textSecondary,
-    fontSize: 15,
-    fontWeight: '800',
-    marginTop: 1,
-  },
+    brandTitle: {
+      color: theme.colors.textPrimary,
+      fontSize: 34,
+      fontFamily: FONTS.title,
+      marginTop: 2,
+      maxWidth: SCREEN_WIDTH - 104,
+    },
 
-  logo: {
-    width: 150,
-    height: 150,
-    marginLeft: 8,
-  },
+    welcomeText: {
+      color: theme.colors.textSecondary,
+      fontSize: 15,
+      fontWeight: '800',
+      marginTop: 1,
+    },
 
-  readTodayCard: {
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 24,
-    padding: 16,
-    marginBottom: 16,
-  },
+    logo: {
+      width: 150,
+      height: 150,
+      marginLeft: 8,
+    },
 
-  readTodayTopRow: { flexDirection: 'row', alignItems: 'center' },
-  cardLabel: { color: COLORS.gold, fontSize: 11, fontWeight: '900', letterSpacing: 1 },
-  readTodayTitle: { color: COLORS.textPrimary, fontSize: 21, fontWeight: '900', marginTop: 5 },
+    readTodayCard: {
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 24,
+      padding: 16,
+      marginBottom: 16,
+    },
 
-  streakBadge: {
-    width: 92,
-    height: 92,
-    borderRadius: 46,
-    backgroundColor: COLORS.surface,
-    borderWidth: 1,
-    borderColor: COLORS.softBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 12,
-  },
+    readTodayTopRow: { flexDirection: 'row', alignItems: 'center' },
+    cardLabel: { color: theme.colors.gold, fontSize: 11, fontWeight: '900', letterSpacing: 1 },
+    readTodayTitle: { color: theme.colors.textPrimary, fontSize: 21, fontWeight: '900', marginTop: 5 },
 
-  streakInlineRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 1,
-  },
-  streakEmoji: { fontSize: 22, marginRight: 5 },
-  streakNumber: { color: COLORS.gold, fontSize: 28, fontWeight: '900' },
-  streakLabel: { color: COLORS.textSecondary, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
+    streakBadge: {
+      width: 92,
+      height: 92,
+      borderRadius: 46,
+      backgroundColor: theme.colors.surface,
+      borderWidth: 1,
+      borderColor: theme.colors.softBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 12,
+    },
 
-  readTodayButton: {
-    backgroundColor: COLORS.gold,
-    borderRadius: 16,
-    paddingVertical: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    marginTop: 15,
-  },
+    streakInlineRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 1,
+    },
+    streakEmoji: { fontSize: 22, marginRight: 5 },
+    streakNumber: { color: theme.colors.gold, fontSize: 28, fontWeight: '900' },
+    streakLabel: { color: theme.colors.textSecondary, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
 
-  readTodayButtonDone: {
-    backgroundColor: COLORS.surface,
-    borderWidth: 1,
-    borderColor: COLORS.gold,
-  },
+    readTodayButton: {
+      backgroundColor: theme.colors.gold,
+      borderRadius: 16,
+      paddingVertical: 13,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      marginTop: 15,
+    },
 
-  readTodayButtonText: { color: COLORS.deepForest, fontWeight: '900' },
-  readTodayButtonDoneText: { color: COLORS.gold },
-  checkIcon: { color: COLORS.gold, fontWeight: '900', fontSize: 17, marginLeft: 8 },
+    readTodayButtonDone: {
+      backgroundColor: theme.colors.surface,
+      borderWidth: 1,
+      borderColor: theme.colors.gold,
+    },
 
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 22,
-    marginBottom: 10,
-  },
+    readTodayButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
+    readTodayButtonDoneText: { color: theme.colors.gold },
+    checkIcon: { color: theme.colors.gold, fontWeight: '900', fontSize: 17, marginLeft: 8 },
 
-  sectionHeaderRowTight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 2,
-    marginBottom: 10,
-  },
+    sectionHeaderRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 22,
+      marginBottom: 10,
+    },
 
-  sectionTitle: { color: COLORS.textPrimary, fontSize: 22, fontWeight: '900' },
-  countPill: {
-    marginLeft: 8,
-    backgroundColor: COLORS.surface,
-    color: COLORS.gold,
-    fontWeight: '900',
-    fontSize: 12,
-    paddingHorizontal: 9,
-    paddingVertical: 2,
-    borderRadius: 999,
-    overflow: 'hidden',
-  },
+    sectionHeaderRowTight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 2,
+      marginBottom: 10,
+    },
 
-  statsGrid: { flexDirection: 'row', gap: 10 },
-  statCard: {
-    flex: 1,
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 18,
-    padding: 14,
-    alignItems: 'center',
-    minHeight: 92,
-    justifyContent: 'center',
-  },
-  statNumber: { color: COLORS.gold, fontSize: 25, fontWeight: '900' },
-  statNumberSmall: { color: COLORS.gold, fontSize: 22, fontWeight: '900' },
-  statStreakRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statEmoji: { fontSize: 20, marginRight: 5 },
-  statLabel: {
-    color: COLORS.textSecondary,
-    fontSize: 12,
-    fontWeight: '800',
-    marginTop: 4,
-    textAlign: 'center',
-  },
+    sectionTitle: { color: theme.colors.textPrimary, fontSize: 22, fontWeight: '900' },
+    countPill: {
+      marginLeft: 8,
+      backgroundColor: theme.colors.surface,
+      color: theme.colors.gold,
+      fontWeight: '900',
+      fontSize: 12,
+      paddingHorizontal: 9,
+      paddingVertical: 2,
+      borderRadius: 999,
+      overflow: 'hidden',
+    },
 
-  emptyHero: {
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 24,
-    padding: 22,
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  emptyEmoji: { fontSize: 34 },
-  emptyTitle: { color: COLORS.textPrimary, fontSize: 20, fontWeight: '900', marginTop: 8 },
-  emptyText: {
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    lineHeight: 20,
-    marginTop: 5,
-    fontWeight: '700',
-  },
+    statsGrid: { flexDirection: 'row', gap: 10 },
+    statCard: {
+      flex: 1,
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 18,
+      padding: 14,
+      alignItems: 'center',
+      minHeight: 92,
+      justifyContent: 'center',
+    },
+    statNumber: { color: theme.colors.gold, fontSize: 25, fontWeight: '900' },
+    statNumberSmall: { color: theme.colors.gold, fontSize: 22, fontWeight: '900' },
+    statStreakRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    statEmoji: { fontSize: 20, marginRight: 5 },
+    statLabel: {
+      color: theme.colors.textSecondary,
+      fontSize: 12,
+      fontWeight: '800',
+      marginTop: 4,
+      textAlign: 'center',
+    },
 
-  currentlyReadingScroller: {
-    width: FEATURED_CARD_WIDTH,
-    marginBottom: 2,
-    overflow: 'hidden',
-  },
-  currentlyReadingContent: {
-    paddingRight: 0,
-  },
+    emptyHero: {
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 24,
+      padding: 22,
+      alignItems: 'center',
+      marginBottom: 4,
+    },
+    emptyEmoji: { fontSize: 34 },
+    emptyTitle: { color: theme.colors.textPrimary, fontSize: 20, fontWeight: '900', marginTop: 8 },
+    emptyText: {
+      color: theme.colors.textSecondary,
+      textAlign: 'center',
+      lineHeight: 20,
+      marginTop: 5,
+      fontWeight: '700',
+    },
 
-  heroCardHorizontal: {
-    width: FEATURED_CARD_WIDTH,
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 26,
-    padding: 16,
-    marginRight: 0,
-    marginBottom: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.14,
-    shadowRadius: 18,
-    elevation: 4,
-  },
+    currentlyReadingScroller: {
+      width: FEATURED_CARD_WIDTH,
+      marginBottom: 2,
+      overflow: 'hidden',
+    },
+    currentlyReadingContent: {
+      paddingRight: 0,
+    },
 
-  heroTopRow: { flexDirection: 'row' },
-  heroTitle: {
-    color: COLORS.textPrimary,
-    fontSize: 20,
-    fontWeight: '900',
-    marginTop: 6,
-    lineHeight: 27,
-  },
-  heroSubtitle: { color: COLORS.textSecondary, fontWeight: '800', marginTop: 6 },
-  bookCover: { width: 64, height: 94, borderRadius: 11, marginLeft: 12 },
-  bookCoverPlaceholder: {
-    width: 64,
-    height: 94,
-    borderRadius: 12,
-    marginLeft: 14,
-    backgroundColor: COLORS.surface,
-    borderWidth: 1,
-    borderColor: COLORS.softBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bookCoverText: { fontSize: 30 },
+    heroCardHorizontal: {
+      width: FEATURED_CARD_WIDTH,
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 26,
+      padding: 16,
+      marginRight: 0,
+      marginBottom: 4,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.14,
+      shadowRadius: 18,
+      elevation: 4,
+    },
 
-  progressInfoRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 14 },
-  progressText: { color: COLORS.textSecondary, fontWeight: '800' },
-  progressPercent: { color: COLORS.gold, fontWeight: '900' },
-  progressTrack: {
-    height: 9,
-    backgroundColor: COLORS.surface,
-    borderRadius: 999,
-    marginTop: 8,
-    overflow: 'hidden',
-  },
-  progressFill: { height: '100%', backgroundColor: COLORS.gold },
-  continueButton: {
-    backgroundColor: COLORS.gold,
-    borderRadius: 16,
-    paddingVertical: 10,
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  continueButtonText: { color: COLORS.deepForest, fontWeight: '900' },
+    heroTopRow: { flexDirection: 'row' },
+    heroTitle: {
+      color: theme.colors.textPrimary,
+      fontSize: 20,
+      fontWeight: '900',
+      marginTop: 6,
+      lineHeight: 27,
+    },
+    heroSubtitle: { color: theme.colors.textSecondary, fontWeight: '800', marginTop: 6 },
+    bookCover: { width: 64, height: 94, borderRadius: 11, marginLeft: 12 },
+    bookCoverPlaceholder: {
+      width: 64,
+      height: 94,
+      borderRadius: 12,
+      marginLeft: 14,
+      backgroundColor: theme.colors.surface,
+      borderWidth: 1,
+      borderColor: theme.colors.softBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bookCoverText: { fontSize: 30 },
 
-  card: {
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 18,
-    padding: 14,
-  },
+    progressInfoRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 14 },
+    progressText: { color: theme.colors.textSecondary, fontWeight: '800' },
+    progressPercent: { color: theme.colors.gold, fontWeight: '900' },
+    progressTrack: {
+      height: 9,
+      backgroundColor: theme.colors.surface,
+      borderRadius: 999,
+      marginTop: 8,
+      overflow: 'hidden',
+    },
+    progressFill: { height: '100%', backgroundColor: theme.colors.gold },
+    continueButton: {
+      backgroundColor: theme.colors.gold,
+      borderRadius: 16,
+      paddingVertical: 10,
+      alignItems: 'center',
+      marginTop: 12,
+    },
+    continueButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
 
-  actionCard: {
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 18,
-    padding: 13,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionIcon: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: COLORS.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 11,
-  },
-  actionIconText: { fontSize: 20 },
-  actionTitle: { color: COLORS.textPrimary, fontWeight: '900', fontSize: 15 },
-  actionSubtitle: {
-    color: COLORS.textSecondary,
-    marginTop: 3,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  chevron: { color: COLORS.gold, fontSize: 28, fontWeight: '900', marginLeft: 8 },
+    card: {
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 18,
+      padding: 14,
+    },
 
-  clubCard: {
-    backgroundColor: COLORS.card,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 18,
-    padding: 12,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  smallCover: { width: 52, height: 76, borderRadius: 9, marginRight: 12 },
-  smallCoverPlaceholder: {
-    width: 52,
-    height: 76,
-    borderRadius: 9,
-    marginRight: 12,
-    backgroundColor: COLORS.surface,
-    borderWidth: 1,
-    borderColor: COLORS.softBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  smallCoverText: { fontSize: 22 },
-  clubName: { color: COLORS.textPrimary, fontWeight: '900', fontSize: 16 },
-  clubBook: { color: COLORS.textSecondary, marginTop: 4, fontWeight: '700' },
-  clubMeta: { color: COLORS.gold, marginTop: 5, fontSize: 12, fontWeight: '800' },
-  clubPercent: { color: COLORS.gold, fontWeight: '900', marginLeft: 10 },
-});
+    actionCard: {
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 18,
+      padding: 13,
+      marginBottom: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    actionIcon: {
+      width: 42,
+      height: 42,
+      borderRadius: 21,
+      backgroundColor: theme.colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 11,
+    },
+    actionIconText: { fontSize: 20 },
+    actionTitle: { color: theme.colors.textPrimary, fontWeight: '900', fontSize: 15 },
+    actionSubtitle: {
+      color: theme.colors.textSecondary,
+      marginTop: 3,
+      fontSize: 12,
+      fontWeight: '700',
+    },
+    chevron: { color: theme.colors.gold, fontSize: 28, fontWeight: '900', marginLeft: 8 },
+
+    clubCard: {
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 18,
+      padding: 12,
+      marginBottom: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    smallCover: { width: 52, height: 76, borderRadius: 9, marginRight: 12 },
+    smallCoverPlaceholder: {
+      width: 52,
+      height: 76,
+      borderRadius: 9,
+      marginRight: 12,
+      backgroundColor: theme.colors.surface,
+      borderWidth: 1,
+      borderColor: theme.colors.softBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    smallCoverText: { fontSize: 22 },
+    clubName: { color: theme.colors.textPrimary, fontWeight: '900', fontSize: 16 },
+    clubBook: { color: theme.colors.textSecondary, marginTop: 4, fontWeight: '700' },
+    clubMeta: { color: theme.colors.gold, marginTop: 5, fontSize: 12, fontWeight: '800' },
+    clubPercent: { color: theme.colors.gold, fontWeight: '900', marginLeft: 10 },
+  });

@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -18,28 +18,35 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calendar } from 'react-native-calendars';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
-
-const calendarTheme = {
-  backgroundColor: COLORS.surface,
-  calendarBackground: COLORS.surface,
-  textSectionTitleColor: COLORS.textSecondary,
-  selectedDayBackgroundColor: COLORS.gold,
-  selectedDayTextColor: COLORS.deepForest,
-  todayTextColor: COLORS.gold,
-  dayTextColor: COLORS.textPrimary,
-  textDisabledColor: COLORS.textMuted,
-  arrowColor: COLORS.gold,
-  monthTextColor: COLORS.textPrimary,
-  textMonthFontFamily: FONTS.title,
-  textDayFontWeight: '700',
-  textDayHeaderFontWeight: '900',
-  textMonthFontSize: 18,
-  textDayFontSize: 15,
-  textDayHeaderFontSize: 12,
-};
+import { FONTS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 export default function CreateClubScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
+  const calendarTheme = useMemo(
+    () => ({
+      backgroundColor: theme.colors.surface,
+      calendarBackground: theme.colors.surface,
+      textSectionTitleColor: theme.colors.textSecondary,
+      selectedDayBackgroundColor: theme.colors.gold,
+      selectedDayTextColor: theme.colors.deepForest,
+      todayTextColor: theme.colors.gold,
+      dayTextColor: theme.colors.textPrimary,
+      textDisabledColor: theme.colors.textMuted,
+      arrowColor: theme.colors.gold,
+      monthTextColor: theme.colors.textPrimary,
+      textMonthFontFamily: FONTS.title,
+      textDayFontWeight: '700',
+      textDayHeaderFontWeight: '900',
+      textMonthFontSize: 18,
+      textDayFontSize: 15,
+      textDayHeaderFontSize: 12,
+    }),
+    [theme]
+  );
+
   const router = useRouter();
   const params = useLocalSearchParams();
 
@@ -401,7 +408,7 @@ export default function CreateClubScreen() {
             value={clubName}
             onChangeText={setClubName}
             placeholder="Example: Sunday Readers"
-            placeholderTextColor={COLORS.textMuted}
+            placeholderTextColor={theme.colors.textMuted}
             style={styles.input}
           />
 
@@ -517,7 +524,7 @@ export default function CreateClubScreen() {
                   value={bookSearch}
                   onChangeText={setBookSearch}
                   placeholder="Search title or author..."
-                  placeholderTextColor={COLORS.textMuted}
+                  placeholderTextColor={theme.colors.textMuted}
                   style={styles.searchInput}
                   returnKeyType="search"
                   onSubmitEditing={searchBooks}
@@ -525,7 +532,7 @@ export default function CreateClubScreen() {
 
                 <TouchableOpacity style={styles.searchButton} onPress={searchBooks} disabled={searchingBooks}>
                   {searchingBooks ? (
-                    <ActivityIndicator color={COLORS.deepForest} />
+                    <ActivityIndicator color={theme.colors.deepForest} />
                   ) : (
                     <Text style={styles.searchButtonText}>Search</Text>
                   )}
@@ -573,7 +580,7 @@ export default function CreateClubScreen() {
                 value={bookName}
                 onChangeText={setBookName}
                 placeholder="Example: Atomic Habits"
-                placeholderTextColor={COLORS.textMuted}
+                placeholderTextColor={theme.colors.textMuted}
                 style={styles.input}
               />
 
@@ -582,7 +589,7 @@ export default function CreateClubScreen() {
                 value={bookAuthor}
                 onChangeText={setBookAuthor}
                 placeholder="Example: James Clear"
-                placeholderTextColor={COLORS.textMuted}
+                placeholderTextColor={theme.colors.textMuted}
                 style={styles.input}
               />
 
@@ -592,7 +599,7 @@ export default function CreateClubScreen() {
                 onChangeText={setTotalChapters}
                 keyboardType="numeric"
                 placeholder="Required"
-                placeholderTextColor={COLORS.textMuted}
+                placeholderTextColor={theme.colors.textMuted}
                 style={styles.input}
               />
 
@@ -602,7 +609,7 @@ export default function CreateClubScreen() {
                 onChangeText={setTotalPages}
                 keyboardType="numeric"
                 placeholder="Example: 320"
-                placeholderTextColor={COLORS.textMuted}
+                placeholderTextColor={theme.colors.textMuted}
                 style={styles.input}
               />
 
@@ -677,8 +684,8 @@ export default function CreateClubScreen() {
                   markedDates={{
                     [formatDateForSupabase(tempDate)]: {
                       selected: true,
-                      selectedColor: COLORS.gold,
-                      selectedTextColor: COLORS.deepForest,
+                      selectedColor: theme.colors.gold,
+                      selectedTextColor: theme.colors.deepForest,
                     },
                   }}
                   theme={calendarTheme}
@@ -696,14 +703,15 @@ export default function CreateClubScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
+const getStyles = (theme) =>
+  StyleSheet.create({
+  page: { flex: 1, backgroundColor: theme.colors.background },
   keyboardView: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
 
   sectionTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 20,
     fontWeight: '900',
     marginTop: 22,
@@ -713,29 +721,29 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: '900',
     marginTop: 15,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   requiredLabel: {
     fontWeight: '900',
     marginTop: 15,
-    color: COLORS.gold,
+    color: theme.colors.gold,
   },
 
   input: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 14,
     padding: 12,
     marginTop: 6,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   dateButton: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 16,
     padding: 13,
     marginTop: 6,
@@ -745,7 +753,7 @@ const styles = StyleSheet.create({
   },
 
   dateButtonTinyLabel: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 1,
@@ -753,13 +761,13 @@ const styles = StyleSheet.create({
   },
 
   dateButtonText: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
     fontSize: 15,
   },
 
   dateButtonPlaceholder: {
-    color: COLORS.textMuted,
+    color: theme.colors.textMuted,
   },
 
   dateIcon: {
@@ -768,7 +776,7 @@ const styles = StyleSheet.create({
   },
 
   dateHelpText: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 12,
     fontWeight: '700',
     lineHeight: 17,
@@ -782,57 +790,57 @@ const styles = StyleSheet.create({
 
   modeCard: {
     flex: 1,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 18,
     padding: 13,
   },
 
   modeCardActive: {
-    backgroundColor: COLORS.gold,
-    borderColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
+    borderColor: theme.colors.gold,
   },
 
   modeTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
     fontSize: 14,
   },
 
   modeTitleActive: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
   },
 
   modeText: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 6,
     fontSize: 12,
     lineHeight: 17,
   },
 
   modeTextActive: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
   },
 
   card: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 14,
     marginTop: 14,
   },
 
   cardLabel: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 11,
     letterSpacing: 1,
   },
 
   cardText: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 6,
     lineHeight: 19,
   },
@@ -845,31 +853,31 @@ const styles = StyleSheet.create({
 
   searchInput: {
     flex: 1,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 14,
     padding: 12,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   searchButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     paddingHorizontal: 14,
     borderRadius: 14,
     justifyContent: 'center',
   },
 
   searchButtonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontWeight: '900',
   },
 
   resultCard: {
     flexDirection: 'row',
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 16,
     padding: 10,
     marginTop: 10,
@@ -887,7 +895,7 @@ const styles = StyleSheet.create({
     height: 74,
     borderRadius: 8,
     marginRight: 10,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -897,27 +905,27 @@ const styles = StyleSheet.create({
   },
 
   resultTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
   },
 
   resultAuthor: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 3,
     fontSize: 12,
   },
 
   resultMeta: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     marginTop: 4,
     fontSize: 12,
     fontWeight: '800',
   },
 
   selectedBookCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 18,
     padding: 12,
     flexDirection: 'row',
@@ -936,9 +944,9 @@ const styles = StyleSheet.create({
     height: 94,
     borderRadius: 10,
     marginRight: 12,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -946,30 +954,30 @@ const styles = StyleSheet.create({
   bookCoverPlaceholderText: { fontSize: 26 },
 
   selectedBookLabel: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 1,
   },
 
   selectedBookTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
     fontSize: 16,
     marginTop: 4,
   },
 
   selectedBookAuthor: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 3,
     fontWeight: '700',
   },
 
   scheduleText: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    color: COLORS.gold,
+    borderColor: theme.colors.border,
+    color: theme.colors.gold,
     padding: 12,
     borderRadius: 14,
     marginTop: 10,
@@ -980,9 +988,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 14,
     padding: 13,
   },
@@ -992,45 +1000,45 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: COLORS.gold,
+    borderColor: theme.colors.gold,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
   },
 
   checkboxChecked: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
   },
 
   checkboxCheck: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontWeight: '900',
   },
 
   checkboxText: {
     flex: 1,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '800',
     lineHeight: 19,
   },
 
   note: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 15,
     lineHeight: 20,
   },
 
   button: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     padding: 14,
     borderRadius: 16,
     marginTop: 25,
   },
 
-  buttonDisabled: { backgroundColor: COLORS.textMuted },
+  buttonDisabled: { backgroundColor: theme.colors.textMuted },
 
   buttonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     textAlign: 'center',
     fontWeight: '900',
   },
@@ -1042,11 +1050,11 @@ const styles = StyleSheet.create({
   },
 
   datePanel: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     padding: 16,
     paddingBottom: 28,
   },
@@ -1059,27 +1067,27 @@ const styles = StyleSheet.create({
   },
 
   datePanelTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 20,
     fontWeight: '900',
   },
 
   datePanelClose: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 20,
     fontWeight: '900',
   },
 
   datePickerWrap: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     overflow: 'hidden',
   },
 
   dateSaveButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 16,
     paddingVertical: 13,
     alignItems: 'center',
@@ -1087,7 +1095,7 @@ const styles = StyleSheet.create({
   },
 
   dateSaveButtonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontWeight: '900',
   },
 });

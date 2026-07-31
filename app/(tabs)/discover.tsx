@@ -1,6 +1,6 @@
 import { Cinzel_700Bold, useFonts } from '@expo-google-fonts/cinzel';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -15,7 +15,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../../components/ScreenHeader';
-import { COLORS } from '../../lib/theme';
+import { useTheme } from '../../lib/theme-context';
+import { Theme } from '../../lib/themes';
 
 type BookResult = {
   id: string;
@@ -131,6 +132,9 @@ const CURATED_BOOKS: Record<string, string[]> = {
 };
 
 export default function DiscoverScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
 
   const [fontsLoaded] = useFonts({
@@ -281,7 +285,7 @@ export default function DiscoverScreen() {
       >
         <ActivityIndicator
           size="large"
-          color={COLORS.gold}
+          color={theme.colors.gold}
         />
       </View>
     );
@@ -328,7 +332,7 @@ export default function DiscoverScreen() {
                 }}
                 placeholder="Search books or authors..."
                 placeholderTextColor={
-                  COLORS.textMuted
+                  theme.colors.textMuted
                 }
                 style={styles.input}
                 returnKeyType="search"
@@ -421,7 +425,7 @@ export default function DiscoverScreen() {
             >
               <ActivityIndicator
                 size="large"
-                color={COLORS.gold}
+                color={theme.colors.gold}
               />
 
               <Text
@@ -528,11 +532,12 @@ export default function DiscoverScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor:
-      COLORS.background,
+      theme.colors.background,
   },
 
   keyboardView: {
@@ -552,17 +557,17 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     backgroundColor:
-      COLORS.background,
+      theme.colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   searchCard: {
     backgroundColor:
-      COLORS.surface,
+      theme.colors.surface,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     borderRadius: 22,
     padding: 16,
   },
@@ -575,20 +580,20 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 11,
     color:
-      COLORS.textPrimary,
+      theme.colors.textPrimary,
   },
 
   searchButton: {
     backgroundColor:
-      COLORS.gold,
+      theme.colors.gold,
     paddingHorizontal: 16,
     borderRadius: 14,
     justifyContent: 'center',
@@ -596,13 +601,13 @@ const styles = StyleSheet.create({
 
   searchButtonText: {
     color:
-      COLORS.deepForest,
+      theme.colors.deepForest,
     fontWeight: '900',
   },
 
   sectionTitle: {
     color:
-      COLORS.textPrimary,
+      theme.colors.textPrimary,
     fontSize: 22,
     fontWeight: '900',
     marginTop: 22,
@@ -611,10 +616,10 @@ const styles = StyleSheet.create({
 
   genrePill: {
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 10,
@@ -623,21 +628,21 @@ const styles = StyleSheet.create({
 
   genrePillActive: {
     backgroundColor:
-      COLORS.gold,
+      theme.colors.gold,
     borderColor:
-      COLORS.gold,
+      theme.colors.gold,
   },
 
   genrePillText: {
     color:
-      COLORS.textPrimary,
+      theme.colors.textPrimary,
     fontWeight: '800',
     fontSize: 12,
   },
 
   genrePillTextActive: {
     color:
-      COLORS.deepForest,
+      theme.colors.deepForest,
   },
 
   loadingBooks: {
@@ -647,17 +652,17 @@ const styles = StyleSheet.create({
 
   loadingText: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     marginTop: 10,
     fontWeight: '800',
   },
 
   bookCard: {
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     borderRadius: 20,
     padding: 12,
     marginBottom: 12,
@@ -672,7 +677,7 @@ const styles = StyleSheet.create({
   },
 
   rankText: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 20,
     fontWeight: '900',
   },
@@ -682,7 +687,7 @@ const styles = StyleSheet.create({
     height: 116,
     borderRadius: 12,
     backgroundColor:
-      COLORS.surface,
+      theme.colors.surface,
   },
 
   bookInfo: {
@@ -694,14 +699,14 @@ const styles = StyleSheet.create({
 
   bookTitle: {
     color:
-      COLORS.textPrimary,
+      theme.colors.textPrimary,
     fontSize: 16,
     fontWeight: '900',
   },
 
   bookAuthor: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     fontSize: 13,
     marginTop: 4,
     fontWeight: '700',
@@ -710,14 +715,14 @@ const styles = StyleSheet.create({
   primaryButton: {
     marginTop: 12,
     backgroundColor:
-      COLORS.gold,
+      theme.colors.gold,
     paddingVertical: 8,
     borderRadius: 12,
   },
 
   primaryButtonText: {
     color:
-      COLORS.deepForest,
+      theme.colors.deepForest,
     textAlign: 'center',
     fontWeight: '900',
     fontSize: 12,

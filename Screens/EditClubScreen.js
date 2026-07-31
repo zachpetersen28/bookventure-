@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
@@ -12,9 +12,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 export default function EditClubScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
   const params = useLocalSearchParams();
 
@@ -182,7 +185,7 @@ export default function EditClubScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingPage} edges={['top']}>
-        <ActivityIndicator size="large" color={COLORS.gold} />
+        <ActivityIndicator size="large" color={theme.colors.gold} />
       </SafeAreaView>
     );
   }
@@ -224,7 +227,7 @@ export default function EditClubScreen() {
           onChangeText={setTotalPages}
           keyboardType="numeric"
           placeholder="Example: 320"
-          placeholderTextColor={COLORS.textMuted}
+          placeholderTextColor={theme.colors.textMuted}
           style={styles.input}
         />
 
@@ -233,7 +236,7 @@ export default function EditClubScreen() {
           value={goalFinishDate}
           onChangeText={setGoalFinishDate}
           placeholder="YYYY-MM-DD"
-          placeholderTextColor={COLORS.textMuted}
+          placeholderTextColor={theme.colors.textMuted}
           style={styles.input}
         />
 
@@ -275,11 +278,12 @@ export default function EditClubScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
+const getStyles = (theme) =>
+  StyleSheet.create({
+  page: { flex: 1, backgroundColor: theme.colors.background },
   loadingPage: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -293,24 +297,24 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: '900',
     marginTop: 15,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   input: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 14,
     padding: 12,
     marginTop: 6,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   scheduleText: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    color: COLORS.gold,
+    borderColor: theme.colors.border,
+    color: theme.colors.gold,
     padding: 12,
     borderRadius: 14,
     marginTop: 10,
@@ -318,44 +322,44 @@ const styles = StyleSheet.create({
   },
 
   toggleButton: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     padding: 12,
     borderRadius: 14,
     marginTop: 18,
   },
 
   toggleButtonOn: {
-    backgroundColor: COLORS.gold,
-    borderColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
+    borderColor: theme.colors.gold,
   },
 
   toggleText: {
     fontWeight: '900',
     textAlign: 'center',
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   toggleTextOn: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
   },
 
   note: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 15,
     lineHeight: 20,
   },
 
   button: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     padding: 14,
     borderRadius: 16,
     marginTop: 25,
   },
 
   buttonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     textAlign: 'center',
     fontWeight: '900',
   },

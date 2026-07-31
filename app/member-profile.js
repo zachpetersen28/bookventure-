@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../lib/avatars';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 const NEUTRAL_AVATAR_EMOJI = '👤';
 
@@ -42,6 +42,9 @@ const formatMemberSince = (createdAt) => {
 };
 
 export default function MemberProfileScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
@@ -82,7 +85,7 @@ export default function MemberProfileScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingPage}>
-        <ActivityIndicator size="large" color={COLORS.gold} />
+        <ActivityIndicator size="large" color={theme.colors.gold} />
       </SafeAreaView>
     );
   }
@@ -175,26 +178,27 @@ export default function MemberProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
+const getStyles = (theme) =>
+  StyleSheet.create({
+  page: { flex: 1, backgroundColor: theme.colors.background },
   loadingPage: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
   content: { padding: 18, paddingBottom: 120, alignItems: 'center' },
 
-  closeButtonText: { color: COLORS.textSecondary, fontSize: 20, fontWeight: '900' },
+  closeButtonText: { color: theme.colors.textSecondary, fontSize: 20, fontWeight: '900' },
   headerWrap: { width: '100%' },
 
   avatarWrap: {
     width: 110,
     height: 110,
     borderRadius: 55,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -203,21 +207,21 @@ const styles = StyleSheet.create({
 
   card: {
     width: '100%',
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 18,
     padding: 14,
     marginTop: 16,
   },
   cardLabel: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 11,
     fontWeight: '900',
     letterSpacing: 1,
   },
   cardText: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     marginTop: 8,
     lineHeight: 20,
     fontWeight: '700',
@@ -230,12 +234,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   genrePill: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
-  genreText: { color: COLORS.textSecondary, fontWeight: '800', fontSize: 12 },
+  genreText: { color: theme.colors.textSecondary, fontWeight: '800', fontSize: 12 },
 
   statsRow: {
     flexDirection: 'row',
@@ -245,16 +249,16 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 18,
     padding: 14,
     alignItems: 'center',
   },
   statEmoji: { fontSize: 22 },
-  statNumber: { color: COLORS.gold, fontSize: 24, fontWeight: '900', marginTop: 4 },
-  statLabel: { color: COLORS.textSecondary, fontSize: 12, fontWeight: '800', marginTop: 4 },
+  statNumber: { color: theme.colors.gold, fontSize: 24, fontWeight: '900', marginTop: 4 },
+  statLabel: { color: theme.colors.textSecondary, fontSize: 12, fontWeight: '800', marginTop: 4 },
 
   emptyState: {
     flex: 1,
@@ -263,19 +267,19 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   emptyEmoji: { fontSize: 34 },
-  emptyTitle: { color: COLORS.textPrimary, fontSize: 20, fontWeight: '900', marginTop: 10 },
+  emptyTitle: { color: theme.colors.textPrimary, fontSize: 20, fontWeight: '900', marginTop: 10 },
   emptyText: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
     marginTop: 6,
     fontWeight: '700',
   },
   backButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 16,
     paddingVertical: 12,
     paddingHorizontal: 24,
     marginTop: 20,
   },
-  backButtonText: { color: COLORS.deepForest, fontWeight: '900' },
+  backButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
 });

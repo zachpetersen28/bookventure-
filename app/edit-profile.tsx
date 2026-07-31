@@ -1,5 +1,5 @@
 import { Stack, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
@@ -14,7 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../lib/avatars';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
+import { Theme } from '../lib/themes';
 
 const MAX_GENRES = 5;
 
@@ -65,6 +66,9 @@ const GENRES = [
 ];
 
 export default function EditProfileScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -180,7 +184,7 @@ export default function EditProfileScreen() {
       >
         <ActivityIndicator
           size="large"
-          color={COLORS.gold}
+          color={theme.colors.gold}
         />
       </SafeAreaView>
     );
@@ -417,11 +421,12 @@ export default function EditProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor:
-      COLORS.background,
+      theme.colors.background,
   },
 
   loadingPage: {
@@ -430,7 +435,7 @@ const styles = StyleSheet.create({
       'center',
     alignItems: 'center',
     backgroundColor:
-      COLORS.background,
+      theme.colors.background,
   },
 
   content: {
@@ -440,17 +445,17 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderRadius: 20,
     padding: 16,
     marginBottom: 14,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
   },
 
   label: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     marginBottom: 8,
     marginTop: 12,
@@ -458,11 +463,11 @@ const styles = StyleSheet.create({
 
   input: {
     backgroundColor:
-      COLORS.surface,
+      theme.colors.surface,
     borderRadius: 12,
     padding: 12,
     color:
-      COLORS.textPrimary,
+      theme.colors.textPrimary,
   },
 
   bioInput: {
@@ -481,7 +486,7 @@ const styles = StyleSheet.create({
     width: '31%',
     borderWidth: 1,
     borderColor:
-      COLORS.softBorder,
+      theme.colors.softBorder,
     borderRadius: 12,
     padding: 10,
     alignItems: 'center',
@@ -489,7 +494,7 @@ const styles = StyleSheet.create({
 
   avatarSelected: {
     borderColor:
-      COLORS.gold,
+      theme.colors.gold,
   },
 
   avatarEmoji: {
@@ -501,7 +506,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: 'center',
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
   },
 
   genreHeader: {
@@ -512,7 +517,7 @@ const styles = StyleSheet.create({
 
   genreCount: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     marginTop: 12,
   },
 
@@ -524,7 +529,7 @@ const styles = StyleSheet.create({
 
   genrePill: {
     backgroundColor:
-      COLORS.surface,
+      theme.colors.surface,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -532,17 +537,17 @@ const styles = StyleSheet.create({
 
   genrePillActive: {
     backgroundColor:
-      COLORS.gold,
+      theme.colors.gold,
   },
 
   genreText: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
   },
 
   genreTextActive: {
     color:
-      COLORS.deepForest,
+      theme.colors.deepForest,
     fontWeight: '900',
   },
 
@@ -557,7 +562,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     backgroundColor:
-      COLORS.surface,
+      theme.colors.surface,
   },
 
   saveButton: {
@@ -566,18 +571,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     backgroundColor:
-      COLORS.gold,
+      theme.colors.gold,
   },
 
   cancelText: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     fontWeight: '900',
   },
 
   saveText: {
     color:
-      COLORS.deepForest,
+      theme.colors.deepForest,
     fontWeight: '900',
   },
 });

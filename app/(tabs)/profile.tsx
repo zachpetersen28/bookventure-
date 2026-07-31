@@ -12,7 +12,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../../lib/avatars';
 import ScreenHeader from '../../components/ScreenHeader';
 import { supabase } from '../../lib/supabase';
-import { COLORS, FONTS } from '../../lib/theme';
+import { FONTS } from '../../lib/theme';
+import { useTheme } from '../../lib/theme-context';
+import { Theme } from '../../lib/themes';
 
 const READER_VIBES: Record<string, string[]> = {
   Fantasy: ['Dragon Hoarder', 'Fantasy Explorer', 'Realm Wanderer', 'Magic Seeker'],
@@ -25,6 +27,9 @@ const READER_VIBES: Record<string, string[]> = {
 };
 
 export default function ProfileScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -150,7 +155,7 @@ export default function ProfileScreen() {
       >
         <ActivityIndicator
           size="large"
-          color={COLORS.gold}
+          color={theme.colors.gold}
         />
 
         <Text style={styles.loadingText}>
@@ -350,17 +355,18 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor:
-      COLORS.background,
+      theme.colors.background,
   },
 
   loadingPage: {
     flex: 1,
     backgroundColor:
-      COLORS.background,
+      theme.colors.background,
     justifyContent:
       'center',
     alignItems: 'center',
@@ -368,7 +374,7 @@ const styles = StyleSheet.create({
 
   loadingText: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     marginTop: 10,
     fontWeight: '800',
   },
@@ -388,10 +394,10 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: 21,
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     alignItems: 'center',
     justifyContent:
       'center',
@@ -403,10 +409,10 @@ const styles = StyleSheet.create({
 
   headerCard: {
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     borderRadius: 24,
     padding: 14,
     flexDirection: 'row',
@@ -419,7 +425,7 @@ const styles = StyleSheet.create({
     height: 88,
     borderRadius: 44,
     backgroundColor:
-      COLORS.gold,
+      theme.colors.gold,
     alignItems: 'center',
     justifyContent:
       'center',
@@ -432,7 +438,7 @@ const styles = StyleSheet.create({
 
   avatarTitle: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     fontSize: 13,
     fontWeight: '700',
     marginTop: 4,
@@ -440,14 +446,14 @@ const styles = StyleSheet.create({
 
   name: {
     color:
-      COLORS.textPrimary,
+      theme.colors.textPrimary,
     fontSize: 26,
     fontFamily:
       FONTS.title,
   },
 
   readerVibe: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     marginTop: 4,
   },
@@ -463,10 +469,10 @@ const styles = StyleSheet.create({
   statCard: {
     width: '48%',
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     borderRadius: 18,
     paddingVertical: 18,
     alignItems: 'center',
@@ -474,14 +480,14 @@ const styles = StyleSheet.create({
   },
 
   statValue: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 22,
     fontWeight: '900',
   },
 
   statLabel: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     fontSize: 11,
     fontWeight: '900',
     marginTop: 6,
@@ -490,17 +496,17 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor:
-      COLORS.card,
+      theme.colors.card,
     borderWidth: 1,
     borderColor:
-      COLORS.border,
+      theme.colors.border,
     borderRadius: 20,
     padding: 14,
     marginBottom: 12,
   },
 
   cardLabel: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 11,
     fontWeight: '900',
     letterSpacing: 1,
@@ -509,14 +515,14 @@ const styles = StyleSheet.create({
 
   bioText: {
     color:
-      COLORS.textSecondary,
+      theme.colors.textSecondary,
     lineHeight: 20,
     fontWeight: '700',
   },
 
   favoriteBook: {
     color:
-      COLORS.textPrimary,
+      theme.colors.textPrimary,
     fontSize: 16,
     fontWeight: '800',
   },
@@ -529,7 +535,7 @@ const styles = StyleSheet.create({
 
   genrePill: {
     backgroundColor:
-      COLORS.gold,
+      theme.colors.gold,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -537,7 +543,7 @@ const styles = StyleSheet.create({
 
   genrePillText: {
     color:
-      COLORS.deepForest,
+      theme.colors.deepForest,
     fontWeight: '900',
     fontSize: 12,
   },

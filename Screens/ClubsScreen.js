@@ -15,9 +15,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 export default function ClubsScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
 
   const [profile, setProfile] = useState(null);
@@ -180,7 +183,7 @@ export default function ClubsScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={COLORS.gold} />
+        <ActivityIndicator size="large" color={theme.colors.gold} />
       </View>
     );
   }
@@ -220,7 +223,7 @@ export default function ClubsScreen() {
           value={searchText}
           onChangeText={setSearchText}
           placeholder="Search clubs, books, or authors..."
-          placeholderTextColor={COLORS.textMuted}
+          placeholderTextColor={theme.colors.textMuted}
           style={styles.searchInput}
         />
 
@@ -307,10 +310,11 @@ export default function ClubsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) =>
+  StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.colors.background,
   },
 
   container: {
@@ -325,15 +329,15 @@ const styles = StyleSheet.create({
 
   loadingContainer: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   actionCard: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 22,
     padding: 16,
     flexDirection: 'row',
@@ -341,13 +345,13 @@ const styles = StyleSheet.create({
   },
 
   actionTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 17,
     fontWeight: '900',
   },
 
   actionSubtitle: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 12,
     marginTop: 4,
     lineHeight: 17,
@@ -359,44 +363,44 @@ const styles = StyleSheet.create({
   },
 
   joinButton: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 999,
   },
 
   joinButtonText: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     textAlign: 'center',
     fontSize: 12,
   },
 
   createButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 999,
   },
 
   createButtonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontWeight: '900',
     textAlign: 'center',
     fontSize: 12,
   },
 
   searchInput: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 16,
     paddingVertical: 13,
     paddingHorizontal: 14,
     marginTop: 14,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 15,
   },
 
@@ -408,15 +412,15 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 22,
     fontWeight: '900',
   },
 
   countPill: {
     marginLeft: 8,
-    backgroundColor: COLORS.surface,
-    color: COLORS.gold,
+    backgroundColor: theme.colors.surface,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 12,
     paddingHorizontal: 9,
@@ -426,23 +430,23 @@ const styles = StyleSheet.create({
   },
 
   emptyCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 18,
     marginTop: 14,
   },
 
   emptyTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
     textAlign: 'center',
     fontSize: 16,
   },
 
   emptyText: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
     marginTop: 6,
     lineHeight: 19,
@@ -450,9 +454,9 @@ const styles = StyleSheet.create({
   },
 
   clubCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 12,
     marginBottom: 10,
@@ -471,9 +475,9 @@ const styles = StyleSheet.create({
     width: 54,
     height: 78,
     borderRadius: 12,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -497,7 +501,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     fontWeight: '900',
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   badgeRow: {
@@ -506,22 +510,22 @@ const styles = StyleSheet.create({
   },
 
   visibilityBadge: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderRadius: 999,
     paddingVertical: 4,
     paddingHorizontal: 7,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
   },
 
   visibilityBadgeText: {
     fontSize: 9,
     fontWeight: '900',
-    color: COLORS.textMuted,
+    color: theme.colors.textMuted,
   },
 
   hostBadge: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 999,
     paddingVertical: 4,
     paddingHorizontal: 7,
@@ -530,11 +534,11 @@ const styles = StyleSheet.create({
   hostBadgeText: {
     fontSize: 9,
     fontWeight: '900',
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
   },
 
   bookName: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 4,
     fontSize: 14,
     fontWeight: '700',
@@ -548,14 +552,14 @@ const styles = StyleSheet.create({
   },
 
   clubMeta: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 12,
     flex: 1,
   },
 
   clubPercent: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 12,
     marginLeft: 8,
@@ -563,7 +567,7 @@ const styles = StyleSheet.create({
 
   progressTrack: {
     height: 6,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderRadius: 999,
     marginTop: 8,
     overflow: 'hidden',
@@ -571,11 +575,11 @@ const styles = StyleSheet.create({
 
   progressFill: {
     height: '100%',
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
   },
 
   chevron: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 26,
     fontWeight: '900',
     marginLeft: 8,

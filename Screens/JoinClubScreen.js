@@ -17,9 +17,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
 import { supabase } from '../lib/supabase';
-import { COLORS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 export default function JoinClubScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
 
   const [profile, setProfile] = useState(null);
@@ -244,7 +247,7 @@ export default function JoinClubScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingPage} edges={['top']}>
-        <ActivityIndicator size="large" color={COLORS.gold} />
+        <ActivityIndicator size="large" color={theme.colors.gold} />
         <Text style={styles.loadingText}>Loading clubs...</Text>
       </SafeAreaView>
     );
@@ -269,7 +272,7 @@ export default function JoinClubScreen() {
               value={searchText}
               onChangeText={setSearchText}
               placeholder="Search clubs, books, or authors..."
-              placeholderTextColor={COLORS.textMuted}
+              placeholderTextColor={theme.colors.textMuted}
               style={styles.input}
             />
           </View>
@@ -332,7 +335,7 @@ export default function JoinClubScreen() {
                       disabled={state.disabled || loadingThisClub}
                     >
                       {loadingThisClub ? (
-                        <ActivityIndicator color={COLORS.deepForest} />
+                        <ActivityIndicator color={theme.colors.deepForest} />
                       ) : (
                         <Text style={[styles.joinButtonText, state.disabled && styles.joinButtonTextDisabled]}>
                           {state.label}
@@ -378,7 +381,7 @@ export default function JoinClubScreen() {
                   onChangeText={setInviteCode}
                   placeholder="Example: A1B2C3"
                   autoCapitalize="characters"
-                  placeholderTextColor={COLORS.textMuted}
+                  placeholderTextColor={theme.colors.textMuted}
                   style={styles.codeInput}
                 />
 
@@ -388,7 +391,7 @@ export default function JoinClubScreen() {
                   disabled={joiningClubId === selectedPrivateClub?.id}
                 >
                   {joiningClubId === selectedPrivateClub?.id ? (
-                    <ActivityIndicator color={COLORS.deepForest} />
+                    <ActivityIndicator color={theme.colors.deepForest} />
                   ) : (
                     <Text style={styles.codeButtonText}>Join Club</Text>
                   )}
@@ -402,36 +405,37 @@ export default function JoinClubScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
+const getStyles = (theme) =>
+  StyleSheet.create({
+  page: { flex: 1, backgroundColor: theme.colors.background },
   keyboardView: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
   loadingPage: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadingText: { color: COLORS.textSecondary, marginTop: 12, fontWeight: '800' },
+  loadingText: { color: theme.colors.textSecondary, marginTop: 12, fontWeight: '800' },
 
   searchOnlyWrap: {
     marginBottom: 2,
   },
   cardLabel: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 11,
     letterSpacing: 1,
   },
   input: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 16,
     padding: 13,
     marginTop: 0,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   sectionHeaderRow: {
@@ -441,14 +445,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sectionTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 22,
     fontWeight: '900',
   },
   countPill: {
     marginLeft: 8,
-    backgroundColor: COLORS.surface,
-    color: COLORS.gold,
+    backgroundColor: theme.colors.surface,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 12,
     paddingHorizontal: 9,
@@ -458,20 +462,20 @@ const styles = StyleSheet.create({
   },
 
   emptyCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 18,
   },
   emptyTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     textAlign: 'center',
     fontWeight: '900',
     fontSize: 16,
   },
   emptyText: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
     marginTop: 5,
     fontWeight: '700',
@@ -479,9 +483,9 @@ const styles = StyleSheet.create({
   },
 
   clubCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 12,
     marginBottom: 10,
@@ -498,9 +502,9 @@ const styles = StyleSheet.create({
     height: 86,
     borderRadius: 10,
     marginRight: 12,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -512,31 +516,31 @@ const styles = StyleSheet.create({
   },
   clubName: {
     flex: 1,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
     fontSize: 17,
   },
   typeBadge: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 999,
     paddingHorizontal: 7,
     paddingVertical: 4,
   },
   typeBadgeText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontSize: 9,
     fontWeight: '900',
   },
   privateBadge: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
   },
   privateBadgeText: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
   },
   clubBook: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     marginTop: 4,
     fontWeight: '700',
   },
@@ -544,35 +548,35 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   clubMeta: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 12,
   },
   voteMeta: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontWeight: '700',
     fontSize: 12,
     marginTop: 2,
   },
   joinButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 999,
     paddingVertical: 9,
     alignItems: 'center',
     marginTop: 10,
   },
   joinButtonDisabled: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
   },
   joinButtonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontWeight: '900',
     fontSize: 12,
   },
   joinButtonTextDisabled: {
-    color: COLORS.textMuted,
+    color: theme.colors.textMuted,
   },
 
   modalOverlay: {
@@ -584,11 +588,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   codePanel: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     padding: 18,
     paddingBottom: 32,
   },
@@ -598,42 +602,42 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   codePanelTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 22,
     fontWeight: '900',
     marginTop: 5,
   },
   closeText: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 20,
     fontWeight: '900',
   },
   codePanelText: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontWeight: '700',
     lineHeight: 20,
     marginTop: 8,
   },
   codeInput: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 16,
     padding: 14,
     marginTop: 14,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
     letterSpacing: 1.5,
   },
   codeButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 16,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 14,
   },
   codeButtonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontWeight: '900',
   },
 });

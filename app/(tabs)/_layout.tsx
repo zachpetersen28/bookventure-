@@ -6,21 +6,18 @@ import {
   MessageCircle,
   User,
 } from 'lucide-react-native';
-
-const COLORS = {
-  forest: '#2F5D50',
-  muted: '#8E8A84',
-  border: '#E7E1D7',
-};
+import { useTheme } from '../../lib/theme-context';
 
 export default function TabsLayout() {
+  const { theme } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
 
-        tabBarActiveTintColor: COLORS.forest,
-        tabBarInactiveTintColor: COLORS.muted,
+        tabBarActiveTintColor: theme.colors.gold,
+        tabBarInactiveTintColor: theme.colors.textMuted,
 
         tabBarStyle: { display: 'none' },
 

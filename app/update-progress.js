@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
     Alert,
     ScrollView,
@@ -11,9 +11,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
-import { COLORS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 export default function UpdateProgressPage() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
   const params = useLocalSearchParams();
 
@@ -82,37 +85,38 @@ export default function UpdateProgressPage() {
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
+const getStyles = (theme) =>
+  StyleSheet.create({
+  page: { flex: 1, backgroundColor: theme.colors.background },
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
 
-  label: { fontWeight: '900', marginTop: 15, color: COLORS.textPrimary },
+  label: { fontWeight: '900', marginTop: 15, color: theme.colors.textPrimary },
 
   input: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 14,
     padding: 12,
     marginTop: 6,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
 
   helper: {
     marginTop: 8,
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
   },
 
   button: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     padding: 14,
     borderRadius: 16,
     marginTop: 25,
   },
 
   buttonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     textAlign: 'center',
     fontWeight: '900',
   },

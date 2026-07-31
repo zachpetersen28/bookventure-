@@ -27,9 +27,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
 import { supabase } from '../lib/supabase';
-import { COLORS, FONTS } from '../lib/theme';
+import { FONTS } from '../lib/theme';
+import { useTheme } from '../lib/theme-context';
 
 export default function ClubScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const router = useRouter();
   const { id, name, book, totalChapters, joinCode } = useLocalSearchParams();
 
@@ -128,10 +132,10 @@ export default function ClubScreen() {
 
   const paceColor =
     paceStatus === 'Ahead'
-      ? COLORS.success || COLORS.gold
+      ? theme.colors.success || theme.colors.gold
       : paceStatus === 'Behind'
-      ? COLORS.danger || '#A64B3C'
-      : COLORS.gold;
+      ? theme.colors.danger || '#A64B3C'
+      : theme.colors.gold;
 
   const chaptersPerWeek =
     totalReadingDays && total > 0 ? Number((total / Math.max(totalReadingDays / 7, 1)).toFixed(1)) : null;
@@ -977,7 +981,7 @@ await loadMembers();
     const circumference = 2 * Math.PI * radius;
     const clampedPercent = Math.max(0, Math.min(percent, 100));
     const strokeDashoffset = circumference - (circumference * clampedPercent) / 100;
-    const progressColor = variant === 'green' ? COLORS.success || COLORS.gold : COLORS.gold;
+    const progressColor = variant === 'green' ? theme.colors.success || theme.colors.gold : theme.colors.gold;
 
     return (
       <View style={styles.progressCircleWrap}>
@@ -986,7 +990,7 @@ await loadMembers();
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke={COLORS.surface}
+            stroke={theme.colors.surface}
             strokeWidth={strokeWidth}
             fill="none"
           />
@@ -1278,7 +1282,7 @@ await loadMembers();
                 value={hostClubName}
                 onChangeText={setHostClubName}
                 placeholder="Club name"
-                placeholderTextColor={COLORS.textMuted}
+                placeholderTextColor={theme.colors.textMuted}
                 style={styles.hostInput}
               />
 
@@ -1288,7 +1292,7 @@ await loadMembers();
                 onChangeText={setHostMaxMembers}
                 keyboardType="numeric"
                 placeholder="Max members"
-                placeholderTextColor={COLORS.textMuted}
+                placeholderTextColor={theme.colors.textMuted}
                 style={styles.hostInput}
               />
 
@@ -1299,7 +1303,7 @@ await loadMembers();
                     value={hostGoalFinishDate}
                     onChangeText={setHostGoalFinishDate}
                     placeholder="MM/DD/YYYY"
-                    placeholderTextColor={COLORS.textMuted}
+                    placeholderTextColor={theme.colors.textMuted}
                     style={styles.hostInput}
                   />
                   <Text style={styles.hostInputHelp}>Used for pacing and reading goals.</Text>
@@ -1316,14 +1320,14 @@ await loadMembers();
                         value={hostVotingStartDate}
                         onChangeText={setHostVotingStartDate}
                         placeholder="Voting starts: MM/DD/YYYY"
-                        placeholderTextColor={COLORS.textMuted}
+                        placeholderTextColor={theme.colors.textMuted}
                         style={styles.hostInput}
                       />
                       <TextInput
                         value={hostVotingEndDate}
                         onChangeText={setHostVotingEndDate}
                         placeholder="Voting ends: MM/DD/YYYY"
-                        placeholderTextColor={COLORS.textMuted}
+                        placeholderTextColor={theme.colors.textMuted}
                         style={[styles.hostInput, styles.hostInputStacked]}
                       />
                       <Text style={styles.hostInputHelp}>Voting dates can be edited until voting has closed.</Text>
@@ -1505,7 +1509,7 @@ await loadMembers();
             value={messageInput}
             onChangeText={setMessageInput}
             placeholder="Message..."
-            placeholderTextColor={COLORS.textMuted}
+            placeholderTextColor={theme.colors.textMuted}
             style={styles.messageInput}
           />
           <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
@@ -1591,7 +1595,7 @@ await loadMembers();
               onChangeText={setWinningBookChapters}
               keyboardType="numeric"
               placeholder="Total chapters required"
-              placeholderTextColor={COLORS.textMuted}
+              placeholderTextColor={theme.colors.textMuted}
               style={styles.fullInput}
             />
             <TouchableOpacity style={styles.primaryButton} onPress={startWinningBook}>
@@ -1622,13 +1626,13 @@ await loadMembers();
                         if (!text.trim()) setBookSearchResults([]);
                       }}
                       placeholder="Search title or author..."
-                      placeholderTextColor={COLORS.textMuted}
+                      placeholderTextColor={theme.colors.textMuted}
                       style={styles.searchInput}
                       returnKeyType="search"
                       onSubmitEditing={searchBooksForSuggestion}
                     />
                     <TouchableOpacity style={styles.searchButton} onPress={searchBooksForSuggestion}>
-                      {searchingBooks ? <ActivityIndicator color={COLORS.deepForest} /> : <Text style={styles.searchButtonText}>Search</Text>}
+                      {searchingBooks ? <ActivityIndicator color={theme.colors.deepForest} /> : <Text style={styles.searchButtonText}>Search</Text>}
                     </TouchableOpacity>
                   </View>
 
@@ -1664,7 +1668,7 @@ await loadMembers();
                     value={manualBookTitle}
                     onChangeText={setManualBookTitle}
                     placeholder="Type exact book title..."
-                    placeholderTextColor={COLORS.textMuted}
+                    placeholderTextColor={theme.colors.textMuted}
                     style={styles.searchInput}
                   />
                   <TouchableOpacity style={styles.searchButton} onPress={addManualSuggestion}>
@@ -1794,7 +1798,7 @@ await loadMembers();
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingPage} edges={['top']}>
-        <ActivityIndicator size="large" color={COLORS.gold} />
+        <ActivityIndicator size="large" color={theme.colors.gold} />
         <Text style={styles.loadingText}>Loading club...</Text>
       </SafeAreaView>
     );
@@ -1833,16 +1837,17 @@ await loadMembers();
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: COLORS.background },
+const getStyles = (theme) =>
+  StyleSheet.create({
+  page: { flex: 1, backgroundColor: theme.colors.background },
   keyboardWrap: { flex: 1 },
   loadingPage: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadingText: { color: COLORS.textSecondary, marginTop: 12, fontWeight: '800' },
+  loadingText: { color: theme.colors.textSecondary, marginTop: 12, fontWeight: '800' },
   container: { flex: 1 },
   content: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 120 },
   chatScreenContent: {
@@ -1853,9 +1858,9 @@ const styles = StyleSheet.create({
   },
 
   headerCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 22,
     padding: 13,
     marginBottom: 12,
@@ -1865,28 +1870,28 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
   },
-  backButtonText: { color: COLORS.gold, fontSize: 28, fontWeight: '900', marginTop: -2 },
-  clubNameHeader: { color: COLORS.textPrimary, fontSize: 22, fontFamily: FONTS.title },
-  clubStatusHeader: { color: COLORS.textSecondary, marginTop: 2, fontWeight: '700' },
+  backButtonText: { color: theme.colors.gold, fontSize: 28, fontWeight: '900', marginTop: -2 },
+  clubNameHeader: { color: theme.colors.textPrimary, fontSize: 22, fontFamily: FONTS.title },
+  clubStatusHeader: { color: theme.colors.textSecondary, marginTop: 2, fontWeight: '700' },
   rolePill: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     paddingVertical: 5,
     paddingHorizontal: 9,
     borderRadius: 999,
   },
-  rolePillText: { color: COLORS.deepForest, fontWeight: '900', fontSize: 10 },
+  rolePillText: { color: theme.colors.deepForest, fontWeight: '900', fontSize: 10 },
 
   heroCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 26,
     padding: 16,
     marginBottom: 14,
@@ -1898,21 +1903,21 @@ const styles = StyleSheet.create({
     height: 104,
     borderRadius: 11,
     marginRight: 13,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   bookCoverText: { fontSize: 28 },
-  cardLabel: { color: COLORS.gold, fontSize: 11, fontWeight: '900', letterSpacing: 1 },
-  heroTitle: { color: COLORS.textPrimary, fontSize: 22, fontWeight: '900', marginTop: 5, lineHeight: 27 },
-  heroSubtitle: { color: COLORS.textSecondary, fontWeight: '800', marginTop: 5 },
+  cardLabel: { color: theme.colors.gold, fontSize: 11, fontWeight: '900', letterSpacing: 1 },
+  heroTitle: { color: theme.colors.textPrimary, fontSize: 22, fontWeight: '900', marginTop: 5, lineHeight: 27 },
+  heroSubtitle: { color: theme.colors.textSecondary, fontWeight: '800', marginTop: 5 },
   votingIconCircle: {
     width: 58,
     height: 58,
     borderRadius: 29,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -1920,29 +1925,29 @@ const styles = StyleSheet.create({
   votingIcon: { fontSize: 26 },
 
   progressTextRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 14 },
-  progressText: { color: COLORS.textSecondary, fontWeight: '800' },
-  progressPercent: { color: COLORS.gold, fontWeight: '900' },
+  progressText: { color: theme.colors.textSecondary, fontWeight: '800' },
+  progressPercent: { color: theme.colors.gold, fontWeight: '900' },
   progressTrack: {
     height: 9,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderRadius: 999,
     marginTop: 8,
     overflow: 'hidden',
   },
-  progressFill: { height: '100%', backgroundColor: COLORS.gold },
-  progressFillGreen: { backgroundColor: COLORS.success || COLORS.gold },
+  progressFill: { height: '100%', backgroundColor: theme.colors.gold },
+  progressFillGreen: { backgroundColor: theme.colors.success || theme.colors.gold },
 
   primaryButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     paddingVertical: 13,
     borderRadius: 16,
     alignItems: 'center',
     marginTop: 15,
   },
-  primaryButtonText: { color: COLORS.deepForest, fontWeight: '900' },
+  primaryButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
 
   chapterConfirmButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 18,
     minHeight: 64,
     marginTop: 15,
@@ -1953,69 +1958,69 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chapterConfirmButtonActive: {
-    backgroundColor: COLORS.deepForest,
+    backgroundColor: theme.colors.deepForest,
     borderWidth: 1,
-    borderColor: COLORS.gold,
+    borderColor: theme.colors.gold,
   },
   chapterConfirmButtonDone: {
-    backgroundColor: COLORS.deepForest,
+    backgroundColor: theme.colors.deepForest,
     borderWidth: 1,
-    borderColor: COLORS.gold,
+    borderColor: theme.colors.gold,
     justifyContent: 'center',
   },
   chapterConfirmIcon: {
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: COLORS.deepForest,
+    backgroundColor: theme.colors.deepForest,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
   },
-  chapterConfirmIconActive: { backgroundColor: COLORS.gold },
-  chapterConfirmIconText: { color: COLORS.gold, fontWeight: '900', fontSize: 18 },
-  chapterConfirmIconTextActive: { color: COLORS.deepForest },
-  chapterConfirmLabel: { color: COLORS.deepForest, fontWeight: '900', fontSize: 15 },
-  chapterConfirmLabelActive: { color: COLORS.gold },
-  chapterConfirmLabelDone: { color: COLORS.gold, textAlign: 'center', fontSize: 16 },
+  chapterConfirmIconActive: { backgroundColor: theme.colors.gold },
+  chapterConfirmIconText: { color: theme.colors.gold, fontWeight: '900', fontSize: 18 },
+  chapterConfirmIconTextActive: { color: theme.colors.deepForest },
+  chapterConfirmLabel: { color: theme.colors.deepForest, fontWeight: '900', fontSize: 15 },
+  chapterConfirmLabelActive: { color: theme.colors.gold },
+  chapterConfirmLabelDone: { color: theme.colors.gold, textAlign: 'center', fontSize: 16 },
   chapterConfirmSubtext: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     opacity: 0.75,
     fontWeight: '800',
     fontSize: 11,
     marginTop: 2,
   },
-  chapterConfirmSubtextActive: { color: COLORS.softGold || COLORS.gold, opacity: 1 },
+  chapterConfirmSubtextActive: { color: theme.colors.softGold || theme.colors.gold, opacity: 1 },
 
   tabRow: {
     flexDirection: 'row',
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     padding: 4,
     marginBottom: 14,
   },
   tabButton: { flex: 1, paddingVertical: 10, borderRadius: 14, alignItems: 'center' },
-  activeTabButton: { backgroundColor: COLORS.gold },
-  tabText: { color: COLORS.textMuted, fontWeight: '900', fontSize: 13 },
-  activeTabText: { color: COLORS.deepForest },
+  activeTabButton: { backgroundColor: theme.colors.gold },
+  tabText: { color: theme.colors.textMuted, fontWeight: '900', fontSize: 13 },
+  activeTabText: { color: theme.colors.deepForest },
 
   card: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 14,
     marginBottom: 12,
   },
-  cardTitle: { color: COLORS.textPrimary, fontSize: 18, fontWeight: '900', marginTop: 5 },
-  cardSubtext: { color: COLORS.textSecondary, marginTop: 6, fontWeight: '700', lineHeight: 19 },
+  cardTitle: { color: theme.colors.textPrimary, fontSize: 18, fontWeight: '900', marginTop: 5 },
+  cardSubtext: { color: theme.colors.textSecondary, marginTop: 6, fontWeight: '700', lineHeight: 19 },
 
   progressCircleCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 14,
     marginBottom: 12,
@@ -2032,16 +2037,16 @@ const styles = StyleSheet.create({
     width: 104,
     height: 104,
     borderRadius: 52,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     paddingHorizontal: 4,
   },
-  progressCircleValue: { color: COLORS.textPrimary, fontSize: 25, fontWeight: '900' },
+  progressCircleValue: { color: theme.colors.textPrimary, fontSize: 25, fontWeight: '900' },
   progressCircleLabel: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 8,
     fontWeight: '900',
     marginTop: 2,
@@ -2055,16 +2060,16 @@ const styles = StyleSheet.create({
   },
   progressCircleDetail: {
     flex: 1,
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 12,
     fontWeight: '800',
     textAlign: 'center',
   },
 
   paceCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 14,
     marginBottom: 12,
@@ -2085,13 +2090,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   paceMainText: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 20,
     fontWeight: '900',
     marginTop: 10,
   },
   paceSubtext: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontWeight: '700',
     marginTop: 5,
   },
@@ -2101,7 +2106,7 @@ const styles = StyleSheet.create({
   },
   paceDivider: {
     height: 1,
-    backgroundColor: COLORS.border,
+    backgroundColor: theme.colors.border,
     marginVertical: 12,
   },
   paceStatsRow: {
@@ -2110,20 +2115,20 @@ const styles = StyleSheet.create({
   },
   paceStatBlock: {
     flex: 1,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 14,
     padding: 11,
     alignItems: 'center',
   },
   paceStatValue: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 18,
     fontWeight: '900',
   },
   paceStatLabel: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 11,
     fontWeight: '800',
     marginTop: 3,
@@ -2131,9 +2136,9 @@ const styles = StyleSheet.create({
   },
 
   discussionShortcut: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 20,
     padding: 14,
     marginBottom: 12,
@@ -2141,32 +2146,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  shortcutTitle: { color: COLORS.textPrimary, fontSize: 18, fontWeight: '900', marginTop: 5 },
-  chevron: { color: COLORS.gold, fontSize: 24, fontWeight: '900' },
+  shortcutTitle: { color: theme.colors.textPrimary, fontSize: 18, fontWeight: '900', marginTop: 5 },
+  chevron: { color: theme.colors.gold, fontSize: 24, fontWeight: '900' },
 
   hostToolsHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  hostToolsTitle: { color: COLORS.textPrimary, fontWeight: '900', marginTop: 5 },
-  hostToolsBody: { marginTop: 14, borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: 14 },
+  hostToolsTitle: { color: theme.colors.textPrimary, fontWeight: '900', marginTop: 5 },
+  hostToolsBody: { marginTop: 14, borderTopWidth: 1, borderTopColor: theme.colors.border, paddingTop: 14 },
   secondaryButton: {
     borderWidth: 1,
-    borderColor: COLORS.gold,
+    borderColor: theme.colors.gold,
     borderRadius: 14,
     paddingVertical: 11,
     alignItems: 'center',
     marginTop: 12,
   },
-  secondaryButtonText: { color: COLORS.gold, fontWeight: '900' },
+  secondaryButtonText: { color: theme.colors.gold, fontWeight: '900' },
   deleteClubButton: {
-    borderColor: COLORS.danger || '#A64B3C',
+    borderColor: theme.colors.danger || '#A64B3C',
   },
   deleteClubButtonText: {
-    color: COLORS.danger || '#A64B3C',
+    color: theme.colors.danger || '#A64B3C',
     fontWeight: '900',
   },
   hostToolInfoCard: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 16,
     padding: 12,
     marginBottom: 10,
@@ -2174,40 +2179,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   hostToolLabel: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 1,
   },
   hostToolValue: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 16,
     fontWeight: '900',
     marginTop: 4,
   },
   hostToolSubtext: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 12,
     fontWeight: '700',
     marginTop: 4,
     lineHeight: 17,
   },
   hostInlineButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 999,
     paddingVertical: 8,
     paddingHorizontal: 14,
     marginLeft: 12,
   },
   hostInlineButtonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontSize: 12,
     fontWeight: '900',
   },
   hostToolRow: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 16,
     padding: 12,
     marginBottom: 10,
@@ -2216,12 +2221,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   hostToolRowTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 15,
     fontWeight: '900',
   },
   hostToolRowSubtext: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 12,
     fontWeight: '700',
     marginTop: 3,
@@ -2229,57 +2234,57 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   deleteClubRow: {
-    borderColor: COLORS.danger || '#A64B3C',
+    borderColor: theme.colors.danger || '#A64B3C',
   },
   deleteClubRowTitle: {
-    color: COLORS.danger || '#A64B3C',
+    color: theme.colors.danger || '#A64B3C',
     fontSize: 15,
     fontWeight: '900',
   },
   inviteCodeBox: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderRadius: 14,
     padding: 13,
     alignItems: 'center',
     marginTop: 10,
   },
-  inviteCodeText: { color: COLORS.gold, fontWeight: '900', fontSize: 22, letterSpacing: 2, marginTop: 4 },
+  inviteCodeText: { color: theme.colors.gold, fontWeight: '900', fontSize: 22, letterSpacing: 2, marginTop: 4 },
   hostToolPlainBlock: {
     marginBottom: 12,
   },
   hostDivider: {
     height: 1,
-    backgroundColor: COLORS.border,
+    backgroundColor: theme.colors.border,
     marginVertical: 14,
   },
   hostSectionTitle: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontSize: 17,
     fontWeight: '900',
     marginBottom: 4,
   },
   hostInputLabel: {
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '900',
     fontSize: 12,
     marginTop: 12,
     marginBottom: 6,
   },
   hostInput: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 11,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     fontWeight: '800',
   },
   hostInputStacked: {
     marginTop: 8,
   },
   hostInputHelp: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontSize: 11,
     fontWeight: '700',
     marginTop: 5,
@@ -2291,7 +2296,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   hostSaveButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 14,
     paddingVertical: 12,
     alignItems: 'center',
@@ -2301,7 +2306,7 @@ const styles = StyleSheet.create({
     opacity: 0.65,
   },
   hostSaveButtonText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontWeight: '900',
   },
   deleteClubPlainButton: {
@@ -2313,82 +2318,82 @@ const styles = StyleSheet.create({
   chapterScrollerContent: { alignItems: 'center', paddingRight: 10 },
   chapterChip: {
     height: 38,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 999,
     paddingHorizontal: 12,
     marginRight: 7,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  chapterChipActive: { backgroundColor: COLORS.gold, borderColor: COLORS.gold },
+  chapterChipActive: { backgroundColor: theme.colors.gold, borderColor: theme.colors.gold },
   chapterChipLocked: { opacity: 0.5 },
-  chapterChipText: { color: COLORS.textMuted, fontWeight: '900', fontSize: 12 },
-  chapterChipTextActive: { color: COLORS.deepForest },
+  chapterChipText: { color: theme.colors.textMuted, fontWeight: '900', fontSize: 12 },
+  chapterChipTextActive: { color: theme.colors.deepForest },
 
   chatMessagesArea: { flex: 1, minHeight: 0, backgroundColor: 'transparent', paddingTop: 4 },
   chatMessagesScroll: { flex: 1 },
   chatMessagesContent: { flexGrow: 1, justifyContent: 'flex-end', paddingBottom: 8 },
   emptyCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 18,
     padding: 16,
     marginBottom: 12,
   },
-  emptyTitle: { color: COLORS.textPrimary, textAlign: 'center', fontWeight: '900', fontSize: 16 },
-  emptyText: { color: COLORS.textSecondary, textAlign: 'center', fontWeight: '800', marginTop: 4 },
+  emptyTitle: { color: theme.colors.textPrimary, textAlign: 'center', fontWeight: '900', fontSize: 16 },
+  emptyText: { color: theme.colors.textSecondary, textAlign: 'center', fontWeight: '800', marginTop: 4 },
   messageRow: { marginBottom: 10, flexDirection: 'row' },
   messageRowMine: { justifyContent: 'flex-end' },
   messageRowOther: { justifyContent: 'flex-start' },
   messageBubble: {
     maxWidth: '84%',
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderRadius: 18,
     borderTopLeftRadius: 6,
     paddingVertical: 10,
     paddingHorizontal: 12,
   },
   messageBubbleMine: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderTopLeftRadius: 18,
     borderTopRightRadius: 6,
   },
-  messageUser: { color: COLORS.textPrimary, fontWeight: '900', fontSize: 12, marginBottom: 4 },
-  messageText: { color: COLORS.textPrimary, lineHeight: 20, fontWeight: '600' },
-  messageTextMine: { color: COLORS.deepForest },
+  messageUser: { color: theme.colors.textPrimary, fontWeight: '900', fontSize: 12, marginBottom: 4 },
+  messageText: { color: theme.colors.textPrimary, lineHeight: 20, fontWeight: '600' },
+  messageTextMine: { color: theme.colors.deepForest },
   messageInputRow: {
     flexDirection: 'row',
     gap: 8,
     marginTop: 8,
-    backgroundColor: COLORS.background,
+    backgroundColor: theme.colors.background,
     paddingTop: 8,
     paddingBottom: 4,
   },
   messageInput: {
     flex: 1,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 18,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
   sendButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 14,
     paddingHorizontal: 16,
     justifyContent: 'center',
   },
-  sendButtonText: { color: COLORS.deepForest, fontWeight: '900' },
+  sendButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
 
   voteStatusCardCompact: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 22,
     padding: 15,
     marginBottom: 12,
@@ -2397,20 +2402,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  voteCompactTitle: { color: COLORS.textPrimary, fontSize: 21, fontWeight: '900', marginTop: 5 },
+  voteCompactTitle: { color: theme.colors.textPrimary, fontSize: 21, fontWeight: '900', marginTop: 5 },
   daysPill: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 7,
   },
-  daysPillText: { color: COLORS.gold, fontWeight: '900', fontSize: 11 },
+  daysPillText: { color: theme.colors.gold, fontWeight: '900', fontSize: 11 },
   voteLeaderCard: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 22,
     padding: 12,
     marginBottom: 12,
@@ -2422,14 +2427,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 3,
     zIndex: 2,
   },
   voteLeaderBadgeText: {
-    color: COLORS.deepForest,
+    color: theme.colors.deepForest,
     fontSize: 9,
     fontWeight: '900',
     letterSpacing: 0.8,
@@ -2440,43 +2445,43 @@ const styles = StyleSheet.create({
     height: 86,
     borderRadius: 10,
     marginRight: 12,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  voteLeaderTitle: { color: COLORS.textPrimary, fontWeight: '900', fontSize: 18, paddingRight: 66 },
-  voteLeaderAuthor: { color: COLORS.textSecondary, fontWeight: '700', marginTop: 4 },
-  voteLeaderVotes: { color: COLORS.gold, fontWeight: '900', marginTop: 5 },
+  voteLeaderTitle: { color: theme.colors.textPrimary, fontWeight: '900', fontSize: 18, paddingRight: 66 },
+  voteLeaderAuthor: { color: theme.colors.textSecondary, fontWeight: '700', marginTop: 4 },
+  voteLeaderVotes: { color: theme.colors.gold, fontWeight: '900', marginTop: 5 },
   voteSearchCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 22,
     padding: 14,
     marginBottom: 12,
   },
   manualAddCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 22,
     padding: 14,
     marginBottom: 12,
   },
-  voteSmallHelp: { color: COLORS.textSecondary, fontSize: 12, fontWeight: '700', marginTop: 5, lineHeight: 17 },
+  voteSmallHelp: { color: theme.colors.textSecondary, fontSize: 12, fontWeight: '700', marginTop: 5, lineHeight: 17 },
   mySuggestionPill: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 999,
     paddingVertical: 8,
     paddingHorizontal: 11,
     marginTop: 12,
   },
-  mySuggestionText: { color: COLORS.gold, fontWeight: '900', fontSize: 12 },
-  lockedSuggestionText: { color: COLORS.textSecondary, fontWeight: '800', lineHeight: 19, marginTop: 12 },
+  mySuggestionText: { color: theme.colors.gold, fontWeight: '900', fontSize: 12 },
+  lockedSuggestionText: { color: theme.colors.textSecondary, fontWeight: '800', lineHeight: 19, marginTop: 12 },
   voteChangeHint: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontWeight: '800',
     fontSize: 12,
     marginTop: -4,
@@ -2484,47 +2489,47 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
   winnerCard: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.softBorder,
+    borderColor: theme.colors.softBorder,
     borderRadius: 20,
     padding: 14,
     marginBottom: 12,
   },
-  winnerTitle: { color: COLORS.textPrimary, fontSize: 20, fontWeight: '900', marginTop: 5 },
+  winnerTitle: { color: theme.colors.textPrimary, fontSize: 20, fontWeight: '900', marginTop: 5 },
   fullInput: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 14,
     padding: 12,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
     marginTop: 12,
   },
   searchRow: { flexDirection: 'row', gap: 8, marginTop: 12 },
   searchInput: {
     flex: 1,
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    color: COLORS.textPrimary,
+    color: theme.colors.textPrimary,
   },
   searchButton: {
-    backgroundColor: COLORS.gold,
+    backgroundColor: theme.colors.gold,
     borderRadius: 14,
     paddingHorizontal: 13,
     justifyContent: 'center',
   },
-  searchButtonText: { color: COLORS.deepForest, fontWeight: '900' },
+  searchButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
   searchResultCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 16,
     padding: 10,
     marginTop: 10,
@@ -2535,24 +2540,24 @@ const styles = StyleSheet.create({
     height: 68,
     borderRadius: 8,
     marginRight: 10,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   searchCoverText: { fontSize: 22 },
-  searchTitle: { color: COLORS.textPrimary, fontWeight: '900' },
-  searchAuthor: { color: COLORS.textSecondary, fontSize: 12, marginTop: 3 },
-  searchMeta: { color: COLORS.gold, fontSize: 12, fontWeight: '800', marginTop: 3 },
-  voteButton: { backgroundColor: COLORS.gold, borderRadius: 999, paddingVertical: 8, paddingHorizontal: 12, marginLeft: 8 },
-  voteButtonText: { color: COLORS.deepForest, fontWeight: '900', fontSize: 12 },
-  votedButton: { backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.gold },
-  votedButtonText: { color: COLORS.gold },
+  searchTitle: { color: theme.colors.textPrimary, fontWeight: '900' },
+  searchAuthor: { color: theme.colors.textSecondary, fontSize: 12, marginTop: 3 },
+  searchMeta: { color: theme.colors.gold, fontSize: 12, fontWeight: '800', marginTop: 3 },
+  voteButton: { backgroundColor: theme.colors.gold, borderRadius: 999, paddingVertical: 8, paddingHorizontal: 12, marginLeft: 8 },
+  voteButtonText: { color: theme.colors.deepForest, fontWeight: '900', fontSize: 12 },
+  votedButton: { backgroundColor: theme.colors.surface, borderWidth: 1, borderColor: theme.colors.gold },
+  votedButtonText: { color: theme.colors.gold },
   sectionHeaderRowCompact: { flexDirection: 'row', alignItems: 'center', marginTop: 6, marginBottom: 10 },
-  sectionTitle: { color: COLORS.textPrimary, fontSize: 22, fontWeight: '900' },
+  sectionTitle: { color: theme.colors.textPrimary, fontSize: 22, fontWeight: '900' },
   countPill: {
     marginLeft: 8,
-    backgroundColor: COLORS.surface,
-    color: COLORS.gold,
+    backgroundColor: theme.colors.surface,
+    color: theme.colors.gold,
     fontWeight: '900',
     fontSize: 12,
     paddingHorizontal: 9,
@@ -2560,21 +2565,21 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     overflow: 'hidden',
   },
-  topSuggestionCard: { borderColor: COLORS.gold },
+  topSuggestionCard: { borderColor: theme.colors.gold },
   rankCircle: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 9,
   },
-  rankText: { color: COLORS.gold, fontWeight: '900', fontSize: 12 },
+  rankText: { color: theme.colors.gold, fontWeight: '900', fontSize: 12 },
   suggestionCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 16,
     padding: 12,
     marginBottom: 10,
@@ -2587,18 +2592,18 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 9,
     marginRight: 11,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  suggestionTitle: { color: COLORS.textPrimary, fontWeight: '900' },
-  suggestionMeta: { color: COLORS.textSecondary, marginTop: 3, fontSize: 12, fontWeight: '700' },
-  suggestionVotes: { color: COLORS.gold, marginTop: 3, fontSize: 12, fontWeight: '900' },
+  suggestionTitle: { color: theme.colors.textPrimary, fontWeight: '900' },
+  suggestionMeta: { color: theme.colors.textSecondary, marginTop: 3, fontSize: 12, fontWeight: '700' },
+  suggestionVotes: { color: theme.colors.gold, marginTop: 3, fontSize: 12, fontWeight: '900' },
 
   membersHeroCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 22,
     padding: 14,
     marginBottom: 14,
@@ -2606,66 +2611,66 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   memberStatBlock: { flex: 1, alignItems: 'center' },
-  memberStatDivider: { width: 1, height: 38, backgroundColor: COLORS.border, marginHorizontal: 8 },
-  memberStatValue: { color: COLORS.gold, fontSize: 24, fontWeight: '900' },
-  memberStatLabel: { color: COLORS.textSecondary, fontSize: 11, fontWeight: '900', marginTop: 3 },
+  memberStatDivider: { width: 1, height: 38, backgroundColor: theme.colors.border, marginHorizontal: 8 },
+  memberStatValue: { color: theme.colors.gold, fontSize: 24, fontWeight: '900' },
+  memberStatLabel: { color: theme.colors.textSecondary, fontSize: 11, fontWeight: '900', marginTop: 3 },
   memberCard: {
-    backgroundColor: COLORS.card,
+    backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: theme.colors.border,
     borderRadius: 18,
     padding: 12,
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  memberCardCurrent: { borderColor: COLORS.softBorder, backgroundColor: COLORS.surface },
-  memberCardLeader: { borderColor: COLORS.gold },
+  memberCardCurrent: { borderColor: theme.colors.softBorder, backgroundColor: theme.colors.surface },
+  memberCardLeader: { borderColor: theme.colors.gold },
   memberAvatar: {
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 11,
   },
-  memberAvatarText: { color: COLORS.gold, fontWeight: '900' },
+  memberAvatarText: { color: theme.colors.gold, fontWeight: '900' },
   memberNameRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
-  memberName: { color: COLORS.textPrimary, fontWeight: '900', flexShrink: 1 },
-  hostMiniPill: { backgroundColor: COLORS.gold, borderRadius: 999, paddingHorizontal: 6, paddingVertical: 2 },
-  hostMiniPillText: { color: COLORS.deepForest, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
-  memberMeta: { color: COLORS.textSecondary, marginTop: 3, fontSize: 12, fontWeight: '700' },
+  memberName: { color: theme.colors.textPrimary, fontWeight: '900', flexShrink: 1 },
+  hostMiniPill: { backgroundColor: theme.colors.gold, borderRadius: 999, paddingHorizontal: 6, paddingVertical: 2 },
+  hostMiniPillText: { color: theme.colors.deepForest, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
+  memberMeta: { color: theme.colors.textSecondary, marginTop: 3, fontSize: 12, fontWeight: '700' },
   memberProgressTrack: {
     height: 5,
-    backgroundColor: COLORS.surface,
+    backgroundColor: theme.colors.surface,
     borderRadius: 999,
     marginTop: 7,
     overflow: 'hidden',
   },
-  memberProgressFill: { height: '100%', backgroundColor: COLORS.gold },
+  memberProgressFill: { height: '100%', backgroundColor: theme.colors.gold },
   memberRightColumn: { alignItems: 'flex-end', marginLeft: 8 },
   memberStreak: {
-    color: COLORS.gold,
+    color: theme.colors.gold,
     fontWeight: '900',
     marginBottom: 7,
   },
   memberBestStreak: {
-    color: COLORS.textSecondary,
+    color: theme.colors.textSecondary,
     fontWeight: '800',
     fontSize: 11,
     marginBottom: 8,
   },
-  removeText: { color: COLORS.danger || '#A64B3C', fontWeight: '900', fontSize: 12 },
+  removeText: { color: theme.colors.danger || '#A64B3C', fontWeight: '900', fontSize: 12 },
   leaveButton: {
     borderWidth: 1,
-    borderColor: COLORS.danger || '#A64B3C',
+    borderColor: theme.colors.danger || '#A64B3C',
     borderRadius: 16,
     paddingVertical: 12,
     alignItems: 'center',
     marginTop: 4,
   },
-  leaveButtonText: { color: COLORS.danger || '#A64B3C', fontWeight: '900' },
+  leaveButtonText: { color: theme.colors.danger || '#A64B3C', fontWeight: '900' },
 });
 
 
