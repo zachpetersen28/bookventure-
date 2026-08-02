@@ -116,7 +116,7 @@ const getStyles = (theme) =>
   },
 
   buttonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     textAlign: 'center',
     fontWeight: '900',
   },

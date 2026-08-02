@@ -543,7 +543,7 @@ const getStyles = (theme: Theme) =>
 
   genrePillText: {
     color:
-      theme.colors.deepForest,
+      theme.colors.onAccent,
     fontWeight: '900',
     fontSize: 12,
   },

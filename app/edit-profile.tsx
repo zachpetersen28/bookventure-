@@ -547,7 +547,7 @@ const getStyles = (theme: Theme) =>
 
   genreTextActive: {
     color:
-      theme.colors.deepForest,
+      theme.colors.onAccent,
     fontWeight: '900',
   },
 
@@ -582,7 +582,7 @@ const getStyles = (theme: Theme) =>
 
   saveText: {
     color:
-      theme.colors.deepForest,
+      theme.colors.onAccent,
     fontWeight: '900',
   },
 });

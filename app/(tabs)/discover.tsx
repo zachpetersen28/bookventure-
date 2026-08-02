@@ -601,7 +601,7 @@ const getStyles = (theme: Theme) =>
 
   searchButtonText: {
     color:
-      theme.colors.deepForest,
+      theme.colors.onAccent,
     fontWeight: '900',
   },
 
@@ -642,7 +642,7 @@ const getStyles = (theme: Theme) =>
 
   genrePillTextActive: {
     color:
-      theme.colors.deepForest,
+      theme.colors.onAccent,
   },
 
   loadingBooks: {
@@ -722,7 +722,7 @@ const getStyles = (theme: Theme) =>
 
   primaryButtonText: {
     color:
-      theme.colors.deepForest,
+      theme.colors.onAccent,
     textAlign: 'center',
     fontWeight: '900',
     fontSize: 12,

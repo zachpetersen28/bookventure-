@@ -13,6 +13,12 @@ export type ThemeColors = {
   bronze: string;
   moon: string;
 
+  // Text/icon color for content sitting on top of a `gold`-filled surface
+  // (buttons, pills, badges, active states). Always dark enough to
+  // contrast against `gold`, independent of whether the theme itself is
+  // light or dark.
+  onAccent: string;
+
   textPrimary: string;
   textSecondary: string;
   textMuted: string;
@@ -53,6 +59,8 @@ const forest: Theme = {
     bronze: '#8F6B42',
     moon: '#E8DFC8',
 
+    onAccent: '#0B1614',
+
     textPrimary: '#F5F1E8',
     textSecondary: '#B7B2A8',
     textMuted: '#8F9892',
@@ -83,6 +91,8 @@ const crimson: Theme = {
     bronze: '#9C5A3C',
     moon: '#E9D3C4',
 
+    onAccent: '#160A0C',
+
     textPrimary: '#F3E7E2',
     textSecondary: '#C2A79E',
     textMuted: '#8F7670',
@@ -107,13 +117,13 @@ const parchment: Theme = {
 
     forest: '#5C7A63',
     pine: '#6E8C74',
-    // Always the text color sitting on top of `gold` surfaces (buttons,
-    // pills) — must stay dark even in a light theme for contrast.
     deepForest: '#2B2013',
 
     gold: '#A8823D',
     bronze: '#7A5A2E',
     moon: '#FFFBF2',
+
+    onAccent: '#2B2013',
 
     textPrimary: '#2B2013',
     textSecondary: '#5C513E',
@@ -145,6 +155,8 @@ const ocean: Theme = {
     bronze: '#3D8494',
     moon: '#D8ECF2',
 
+    onAccent: '#081018',
+
     textPrimary: '#EAF3F7',
     textSecondary: '#A9C2CE',
     textMuted: '#7C93A0',
@@ -157,6 +169,104 @@ const ocean: Theme = {
   },
 };
 
-export const THEMES: Theme[] = [forest, crimson, parchment, ocean];
+// Lightweight placeholder light themes for Stage 2 contrast testing.
+// Will be replaced when the real 20-theme collection is defined.
+const linen: Theme = {
+  id: 'linen',
+  name: 'Linen',
+  isLight: true,
+  backgroundImage: null,
+  colors: {
+    background: '#F4F1EC',
+    surface: '#EAE5DC',
+    card: '#FFFFFF',
+
+    forest: '#4A6B5A',
+    pine: '#5C7E6C',
+    deepForest: '#26312B',
+
+    gold: '#9C7A3C',
+    bronze: '#7A5C2E',
+    moon: '#FFFFFF',
+
+    onAccent: '#241C0E',
+
+    textPrimary: '#252220',
+    textSecondary: '#5A554C',
+    textMuted: '#8B857A',
+
+    border: '#DED7C8',
+    softBorder: '#CFC6B0',
+
+    success: '#4C7A5C',
+    danger: '#A6493A',
+  },
+};
+
+const sakura: Theme = {
+  id: 'sakura',
+  name: 'Sakura',
+  isLight: true,
+  backgroundImage: null,
+  colors: {
+    background: '#FCEEF1',
+    surface: '#F7E0E6',
+    card: '#FFFFFF',
+
+    forest: '#6B4A5A',
+    pine: '#7D5C6C',
+    deepForest: '#3A2430',
+
+    gold: '#C97B94',
+    bronze: '#A85C74',
+    moon: '#FFFFFF',
+
+    onAccent: '#2E1620',
+
+    textPrimary: '#3A2430',
+    textSecondary: '#6B4A5A',
+    textMuted: '#9C7E8A',
+
+    border: '#F0D0D8',
+    softBorder: '#E6BFC9',
+
+    success: '#5C8A6C',
+    danger: '#B94A5A',
+  },
+};
+
+const sky: Theme = {
+  id: 'sky',
+  name: 'Sky',
+  isLight: true,
+  backgroundImage: null,
+  colors: {
+    background: '#EAF3FA',
+    surface: '#DCEAF5',
+    card: '#FFFFFF',
+
+    forest: '#3E6B85',
+    pine: '#4E7D97',
+    deepForest: '#132430',
+
+    gold: '#3E8FBF',
+    bronze: '#2E6E99',
+    moon: '#FFFFFF',
+
+    onAccent: '#0A1820',
+
+    textPrimary: '#152430',
+    textSecondary: '#43586A',
+    textMuted: '#7C93A3',
+
+    border: '#CBE0F0',
+    softBorder: '#B8D4EA',
+
+    success: '#4C8A6C',
+    danger: '#B9483A',
+  },
+};
+
+export const THEMES: Theme[] = [forest, crimson, parchment, ocean, linen, sakura, sky];
 
 export const DEFAULT_THEME_ID = forest.id;

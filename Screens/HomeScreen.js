@@ -680,7 +680,7 @@ const getStyles = (theme) =>
       borderColor: theme.colors.gold,
     },
 
-    readTodayButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
+    readTodayButtonText: { color: theme.colors.onAccent, fontWeight: '900' },
     readTodayButtonDoneText: { color: theme.colors.gold },
     checkIcon: { color: theme.colors.gold, fontWeight: '900', fontSize: 17, marginLeft: 8 },
 
@@ -824,7 +824,7 @@ const getStyles = (theme) =>
       alignItems: 'center',
       marginTop: 12,
     },
-    continueButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
+    continueButtonText: { color: theme.colors.onAccent, fontWeight: '900' },
 
     card: {
       backgroundColor: theme.colors.card,

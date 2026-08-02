@@ -281,5 +281,5 @@ const getStyles = (theme) =>
     paddingHorizontal: 24,
     marginTop: 20,
   },
-  backButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
+  backButtonText: { color: theme.colors.onAccent, fontWeight: '900' },
 });

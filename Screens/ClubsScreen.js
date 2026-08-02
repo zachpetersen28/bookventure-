@@ -386,7 +386,7 @@ const getStyles = (theme) =>
   },
 
   createButtonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontWeight: '900',
     textAlign: 'center',
     fontSize: 12,
@@ -534,7 +534,7 @@ const getStyles = (theme) =>
   hostBadgeText: {
     fontSize: 9,
     fontWeight: '900',
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
   },
 
   bookName: {

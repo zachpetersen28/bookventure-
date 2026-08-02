@@ -127,16 +127,14 @@ const getStyles = (theme: Theme) =>
   deleteCard: {
     backgroundColor: theme.colors.card,
     borderWidth: 1,
-    borderColor: '#7A1D1D',
+    borderColor: theme.colors.danger,
     borderRadius: 20,
     padding: 16,
     marginTop: 6,
   },
   deleteButton: {
-    backgroundColor: '#7A1D1D',
-    borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
   },
-  deleteText: { color: 'white', fontWeight: '900', fontSize: 14 },
+  deleteText: { color: theme.colors.danger, fontWeight: '900', fontSize: 14 },
 });

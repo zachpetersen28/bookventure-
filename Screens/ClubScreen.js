@@ -132,9 +132,9 @@ export default function ClubScreen() {
 
   const paceColor =
     paceStatus === 'Ahead'
-      ? theme.colors.success || theme.colors.gold
+      ? theme.colors.success
       : paceStatus === 'Behind'
-      ? theme.colors.danger || '#A64B3C'
+      ? theme.colors.danger
       : theme.colors.gold;
 
   const chaptersPerWeek =
@@ -981,7 +981,7 @@ await loadMembers();
     const circumference = 2 * Math.PI * radius;
     const clampedPercent = Math.max(0, Math.min(percent, 100));
     const strokeDashoffset = circumference - (circumference * clampedPercent) / 100;
-    const progressColor = variant === 'green' ? theme.colors.success || theme.colors.gold : theme.colors.gold;
+    const progressColor = variant === 'green' ? theme.colors.success : theme.colors.gold;
 
     return (
       <View style={styles.progressCircleWrap}>
@@ -1632,7 +1632,7 @@ await loadMembers();
                       onSubmitEditing={searchBooksForSuggestion}
                     />
                     <TouchableOpacity style={styles.searchButton} onPress={searchBooksForSuggestion}>
-                      {searchingBooks ? <ActivityIndicator color={theme.colors.deepForest} /> : <Text style={styles.searchButtonText}>Search</Text>}
+                      {searchingBooks ? <ActivityIndicator color={theme.colors.onAccent} /> : <Text style={styles.searchButtonText}>Search</Text>}
                     </TouchableOpacity>
                   </View>
 
@@ -1886,7 +1886,7 @@ const getStyles = (theme) =>
     paddingHorizontal: 9,
     borderRadius: 999,
   },
-  rolePillText: { color: theme.colors.deepForest, fontWeight: '900', fontSize: 10 },
+  rolePillText: { color: theme.colors.onAccent, fontWeight: '900', fontSize: 10 },
 
   heroCard: {
     backgroundColor: theme.colors.card,
@@ -1935,7 +1935,7 @@ const getStyles = (theme) =>
     overflow: 'hidden',
   },
   progressFill: { height: '100%', backgroundColor: theme.colors.gold },
-  progressFillGreen: { backgroundColor: theme.colors.success || theme.colors.gold },
+  progressFillGreen: { backgroundColor: theme.colors.success },
 
   primaryButton: {
     backgroundColor: theme.colors.gold,
@@ -1944,7 +1944,7 @@ const getStyles = (theme) =>
     alignItems: 'center',
     marginTop: 15,
   },
-  primaryButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
+  primaryButtonText: { color: theme.colors.onAccent, fontWeight: '900' },
 
   chapterConfirmButton: {
     backgroundColor: theme.colors.gold,
@@ -1979,18 +1979,18 @@ const getStyles = (theme) =>
   },
   chapterConfirmIconActive: { backgroundColor: theme.colors.gold },
   chapterConfirmIconText: { color: theme.colors.gold, fontWeight: '900', fontSize: 18 },
-  chapterConfirmIconTextActive: { color: theme.colors.deepForest },
-  chapterConfirmLabel: { color: theme.colors.deepForest, fontWeight: '900', fontSize: 15 },
+  chapterConfirmIconTextActive: { color: theme.colors.onAccent },
+  chapterConfirmLabel: { color: theme.colors.onAccent, fontWeight: '900', fontSize: 15 },
   chapterConfirmLabelActive: { color: theme.colors.gold },
   chapterConfirmLabelDone: { color: theme.colors.gold, textAlign: 'center', fontSize: 16 },
   chapterConfirmSubtext: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     opacity: 0.75,
     fontWeight: '800',
     fontSize: 11,
     marginTop: 2,
   },
-  chapterConfirmSubtextActive: { color: theme.colors.softGold || theme.colors.gold, opacity: 1 },
+  chapterConfirmSubtextActive: { color: theme.colors.gold, opacity: 1 },
 
   tabRow: {
     flexDirection: 'row',
@@ -2004,7 +2004,7 @@ const getStyles = (theme) =>
   tabButton: { flex: 1, paddingVertical: 10, borderRadius: 14, alignItems: 'center' },
   activeTabButton: { backgroundColor: theme.colors.gold },
   tabText: { color: theme.colors.textMuted, fontWeight: '900', fontSize: 13 },
-  activeTabText: { color: theme.colors.deepForest },
+  activeTabText: { color: theme.colors.onAccent },
 
   card: {
     backgroundColor: theme.colors.card,
@@ -2162,10 +2162,10 @@ const getStyles = (theme) =>
   },
   secondaryButtonText: { color: theme.colors.gold, fontWeight: '900' },
   deleteClubButton: {
-    borderColor: theme.colors.danger || '#A64B3C',
+    borderColor: theme.colors.danger,
   },
   deleteClubButtonText: {
-    color: theme.colors.danger || '#A64B3C',
+    color: theme.colors.danger,
     fontWeight: '900',
   },
   hostToolInfoCard: {
@@ -2205,7 +2205,7 @@ const getStyles = (theme) =>
     marginLeft: 12,
   },
   hostInlineButtonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontSize: 12,
     fontWeight: '900',
   },
@@ -2234,10 +2234,10 @@ const getStyles = (theme) =>
     paddingRight: 8,
   },
   deleteClubRow: {
-    borderColor: theme.colors.danger || '#A64B3C',
+    borderColor: theme.colors.danger,
   },
   deleteClubRowTitle: {
-    color: theme.colors.danger || '#A64B3C',
+    color: theme.colors.danger,
     fontSize: 15,
     fontWeight: '900',
   },
@@ -2306,7 +2306,7 @@ const getStyles = (theme) =>
     opacity: 0.65,
   },
   hostSaveButtonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontWeight: '900',
   },
   deleteClubPlainButton: {
@@ -2330,7 +2330,7 @@ const getStyles = (theme) =>
   chapterChipActive: { backgroundColor: theme.colors.gold, borderColor: theme.colors.gold },
   chapterChipLocked: { opacity: 0.5 },
   chapterChipText: { color: theme.colors.textMuted, fontWeight: '900', fontSize: 12 },
-  chapterChipTextActive: { color: theme.colors.deepForest },
+  chapterChipTextActive: { color: theme.colors.onAccent },
 
   chatMessagesArea: { flex: 1, minHeight: 0, backgroundColor: 'transparent', paddingTop: 4 },
   chatMessagesScroll: { flex: 1 },
@@ -2363,7 +2363,7 @@ const getStyles = (theme) =>
   },
   messageUser: { color: theme.colors.textPrimary, fontWeight: '900', fontSize: 12, marginBottom: 4 },
   messageText: { color: theme.colors.textPrimary, lineHeight: 20, fontWeight: '600' },
-  messageTextMine: { color: theme.colors.deepForest },
+  messageTextMine: { color: theme.colors.onAccent },
   messageInputRow: {
     flexDirection: 'row',
     gap: 8,
@@ -2388,7 +2388,7 @@ const getStyles = (theme) =>
     paddingHorizontal: 16,
     justifyContent: 'center',
   },
-  sendButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
+  sendButtonText: { color: theme.colors.onAccent, fontWeight: '900' },
 
   voteStatusCardCompact: {
     backgroundColor: theme.colors.card,
@@ -2434,7 +2434,7 @@ const getStyles = (theme) =>
     zIndex: 2,
   },
   voteLeaderBadgeText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontSize: 9,
     fontWeight: '900',
     letterSpacing: 0.8,
@@ -2523,7 +2523,7 @@ const getStyles = (theme) =>
     paddingHorizontal: 13,
     justifyContent: 'center',
   },
-  searchButtonText: { color: theme.colors.deepForest, fontWeight: '900' },
+  searchButtonText: { color: theme.colors.onAccent, fontWeight: '900' },
   searchResultCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2549,7 +2549,7 @@ const getStyles = (theme) =>
   searchAuthor: { color: theme.colors.textSecondary, fontSize: 12, marginTop: 3 },
   searchMeta: { color: theme.colors.gold, fontSize: 12, fontWeight: '800', marginTop: 3 },
   voteButton: { backgroundColor: theme.colors.gold, borderRadius: 999, paddingVertical: 8, paddingHorizontal: 12, marginLeft: 8 },
-  voteButtonText: { color: theme.colors.deepForest, fontWeight: '900', fontSize: 12 },
+  voteButtonText: { color: theme.colors.onAccent, fontWeight: '900', fontSize: 12 },
   votedButton: { backgroundColor: theme.colors.surface, borderWidth: 1, borderColor: theme.colors.gold },
   votedButtonText: { color: theme.colors.gold },
   sectionHeaderRowCompact: { flexDirection: 'row', alignItems: 'center', marginTop: 6, marginBottom: 10 },
@@ -2639,7 +2639,7 @@ const getStyles = (theme) =>
   memberNameRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   memberName: { color: theme.colors.textPrimary, fontWeight: '900', flexShrink: 1 },
   hostMiniPill: { backgroundColor: theme.colors.gold, borderRadius: 999, paddingHorizontal: 6, paddingVertical: 2 },
-  hostMiniPillText: { color: theme.colors.deepForest, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
+  hostMiniPillText: { color: theme.colors.onAccent, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
   memberMeta: { color: theme.colors.textSecondary, marginTop: 3, fontSize: 12, fontWeight: '700' },
   memberProgressTrack: {
     height: 5,
@@ -2661,16 +2661,16 @@ const getStyles = (theme) =>
     fontSize: 11,
     marginBottom: 8,
   },
-  removeText: { color: theme.colors.danger || '#A64B3C', fontWeight: '900', fontSize: 12 },
+  removeText: { color: theme.colors.danger, fontWeight: '900', fontSize: 12 },
   leaveButton: {
     borderWidth: 1,
-    borderColor: theme.colors.danger || '#A64B3C',
+    borderColor: theme.colors.danger,
     borderRadius: 16,
     paddingVertical: 12,
     alignItems: 'center',
     marginTop: 4,
   },
-  leaveButtonText: { color: theme.colors.danger || '#A64B3C', fontWeight: '900' },
+  leaveButtonText: { color: theme.colors.danger, fontWeight: '900' },
 });
 
 

@@ -335,7 +335,7 @@ export default function JoinClubScreen() {
                       disabled={state.disabled || loadingThisClub}
                     >
                       {loadingThisClub ? (
-                        <ActivityIndicator color={theme.colors.deepForest} />
+                        <ActivityIndicator color={theme.colors.onAccent} />
                       ) : (
                         <Text style={[styles.joinButtonText, state.disabled && styles.joinButtonTextDisabled]}>
                           {state.label}
@@ -391,7 +391,7 @@ export default function JoinClubScreen() {
                   disabled={joiningClubId === selectedPrivateClub?.id}
                 >
                   {joiningClubId === selectedPrivateClub?.id ? (
-                    <ActivityIndicator color={theme.colors.deepForest} />
+                    <ActivityIndicator color={theme.colors.onAccent} />
                   ) : (
                     <Text style={styles.codeButtonText}>Join Club</Text>
                   )}
@@ -527,7 +527,7 @@ const getStyles = (theme) =>
     paddingVertical: 4,
   },
   typeBadgeText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontSize: 9,
     fontWeight: '900',
   },
@@ -571,7 +571,7 @@ const getStyles = (theme) =>
     borderColor: theme.colors.softBorder,
   },
   joinButtonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontWeight: '900',
     fontSize: 12,
   },
@@ -637,7 +637,7 @@ const getStyles = (theme) =>
     marginTop: 14,
   },
   codeButtonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontWeight: '900',
   },
 });

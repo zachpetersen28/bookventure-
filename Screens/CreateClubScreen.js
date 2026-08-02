@@ -31,7 +31,7 @@ export default function CreateClubScreen() {
       calendarBackground: theme.colors.surface,
       textSectionTitleColor: theme.colors.textSecondary,
       selectedDayBackgroundColor: theme.colors.gold,
-      selectedDayTextColor: theme.colors.deepForest,
+      selectedDayTextColor: theme.colors.onAccent,
       todayTextColor: theme.colors.gold,
       dayTextColor: theme.colors.textPrimary,
       textDisabledColor: theme.colors.textMuted,
@@ -532,7 +532,7 @@ export default function CreateClubScreen() {
 
                 <TouchableOpacity style={styles.searchButton} onPress={searchBooks} disabled={searchingBooks}>
                   {searchingBooks ? (
-                    <ActivityIndicator color={theme.colors.deepForest} />
+                    <ActivityIndicator color={theme.colors.onAccent} />
                   ) : (
                     <Text style={styles.searchButtonText}>Search</Text>
                   )}
@@ -685,7 +685,7 @@ export default function CreateClubScreen() {
                     [formatDateForSupabase(tempDate)]: {
                       selected: true,
                       selectedColor: theme.colors.gold,
-                      selectedTextColor: theme.colors.deepForest,
+                      selectedTextColor: theme.colors.onAccent,
                     },
                   }}
                   theme={calendarTheme}
@@ -809,7 +809,7 @@ const getStyles = (theme) =>
   },
 
   modeTitleActive: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
   },
 
   modeText: {
@@ -820,7 +820,7 @@ const getStyles = (theme) =>
   },
 
   modeTextActive: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
   },
 
   card: {
@@ -869,7 +869,7 @@ const getStyles = (theme) =>
   },
 
   searchButtonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontWeight: '900',
   },
 
@@ -1011,7 +1011,7 @@ const getStyles = (theme) =>
   },
 
   checkboxCheck: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontWeight: '900',
   },
 
@@ -1038,7 +1038,7 @@ const getStyles = (theme) =>
   buttonDisabled: { backgroundColor: theme.colors.textMuted },
 
   buttonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     textAlign: 'center',
     fontWeight: '900',
   },
@@ -1095,7 +1095,7 @@ const getStyles = (theme) =>
   },
 
   dateSaveButtonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     fontWeight: '900',
   },
 });

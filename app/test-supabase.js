@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { supabase } from '../lib/supabase';
+import { useTheme } from '../lib/theme-context';
 
 export default function TestSupabasePage() {
+  const { theme } = useTheme();
   const [message, setMessage] = useState('Testing Supabase...');
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function TestSupabasePage() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20, backgroundColor: '#fff' }}>
+    <View style={{ flex: 1, padding: 20, backgroundColor: theme.colors.background }}>
       <Text>{message}</Text>
     </View>
   );

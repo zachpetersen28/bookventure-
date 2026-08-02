@@ -2,16 +2,17 @@ import { Stack, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import BottomTabBar from '../components/BottomTabBar';
-import { ThemeProvider } from '../lib/theme-context';
+import { ThemeProvider, useTheme } from '../lib/theme-context';
 
 const HIDDEN_TAB_BAR_ROUTES = ['/login', '/test-supabase'];
 
-export default function RootLayout() {
+function RootLayoutContent() {
   const pathname = usePathname();
+  const { theme } = useTheme();
   const showTabBar = !HIDDEN_TAB_BAR_ROUTES.includes(pathname);
 
   return (
-    <ThemeProvider>
+    <>
       <View style={{ flex: 1 }}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -27,7 +28,15 @@ export default function RootLayout() {
         {showTabBar && <BottomTabBar />}
       </View>
 
-      <StatusBar style="auto" />
+      <StatusBar style={theme.isLight ? 'dark' : 'light'} />
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <RootLayoutContent />
     </ThemeProvider>
   );
 }

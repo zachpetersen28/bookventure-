@@ -342,7 +342,7 @@ const getStyles = (theme) =>
   },
 
   toggleTextOn: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
   },
 
   note: {
@@ -359,7 +359,7 @@ const getStyles = (theme) =>
   },
 
   buttonText: {
-    color: theme.colors.deepForest,
+    color: theme.colors.onAccent,
     textAlign: 'center',
     fontWeight: '900',
   },
