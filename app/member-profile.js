@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../lib/avatars';
 import ScreenHeader from '../components/ScreenHeader';
+import ThemedBackground from '../components/ThemedBackground';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme-context';
 
@@ -84,15 +85,17 @@ export default function MemberProfileScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.loadingPage}>
-        <ActivityIndicator size="large" color={theme.colors.gold} />
-      </SafeAreaView>
+      <ThemedBackground>
+        <SafeAreaView style={styles.loadingPage}>
+          <ActivityIndicator size="large" color={theme.colors.gold} />
+        </SafeAreaView>
+      </ThemedBackground>
     );
   }
 
   if (notFound || !profile) {
     return (
-      <>
+      <ThemedBackground>
         <Stack.Screen options={{ headerShown: false }} />
         <SafeAreaView style={styles.page}>
           <View style={styles.emptyState}>
@@ -105,14 +108,14 @@ export default function MemberProfileScreen() {
             </TouchableOpacity>
           </View>
         </SafeAreaView>
-      </>
+      </ThemedBackground>
     );
   }
 
   const genres = profile.favorite_genres || [];
 
   return (
-    <>
+    <ThemedBackground>
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView style={styles.page}>
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -174,16 +177,16 @@ export default function MemberProfileScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </ThemedBackground>
   );
 }
 
 const getStyles = (theme) =>
   StyleSheet.create({
-  page: { flex: 1, backgroundColor: theme.colors.background },
+  page: { flex: 1, backgroundColor: 'transparent' },
   loadingPage: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },

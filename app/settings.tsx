@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
+import ThemedBackground from '../components/ThemedBackground';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme-context';
 import { Theme } from '../lib/themes';
@@ -50,7 +51,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <>
+    <ThemedBackground>
       <Stack.Screen options={{ headerShown: false }} />
 
       <SafeAreaView style={styles.page} edges={['top']}>
@@ -91,13 +92,13 @@ export default function SettingsScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </ThemedBackground>
   );
 }
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-  page: { flex: 1, backgroundColor: theme.colors.background },
+  page: { flex: 1, backgroundColor: 'transparent' },
   container: { flex: 1 },
   content: { paddingHorizontal: 18, paddingTop: 12, paddingBottom: 120 },
   card: {

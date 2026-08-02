@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
+import ThemedBackground from '../components/ThemedBackground';
 import { useTheme } from '../lib/theme-context';
 
 export default function UpdateProgressPage() {
@@ -63,6 +64,7 @@ export default function UpdateProgressPage() {
   };
 
   return (
+    <ThemedBackground>
     <SafeAreaView style={styles.page} edges={['top']}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <ScreenHeader title="Update Progress" subtitle={params.name} onBack={() => router.back()} />
@@ -82,12 +84,13 @@ export default function UpdateProgressPage() {
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
+    </ThemedBackground>
   );
 }
 
 const getStyles = (theme) =>
   StyleSheet.create({
-  page: { flex: 1, backgroundColor: theme.colors.background },
+  page: { flex: 1, backgroundColor: 'transparent' },
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
 

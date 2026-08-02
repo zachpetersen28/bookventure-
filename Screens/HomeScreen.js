@@ -18,6 +18,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ThemedBackground from '../components/ThemedBackground';
 import { supabase } from '../lib/supabase';
 import { FONTS } from '../lib/theme';
 import { useTheme } from '../lib/theme-context';
@@ -324,14 +325,17 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.loadingPage} edges={['top']}>
-        <ActivityIndicator size="large" color={theme.colors.gold} />
-        <Text style={styles.loadingText}>Loading your dashboard...</Text>
-      </SafeAreaView>
+      <ThemedBackground>
+        <SafeAreaView style={styles.loadingPage} edges={['top']}>
+          <ActivityIndicator size="large" color={theme.colors.gold} />
+          <Text style={styles.loadingText}>Loading your dashboard...</Text>
+        </SafeAreaView>
+      </ThemedBackground>
     );
   }
 
   return (
+    <ThemedBackground>
     <SafeAreaView style={styles.page} edges={['top']}>
       <ScrollView
         style={styles.container}
@@ -561,15 +565,16 @@ export default function HomeScreen() {
         })}
       </ScrollView>
     </SafeAreaView>
+    </ThemedBackground>
   );
 }
 
 const getStyles = (theme) =>
   StyleSheet.create({
-    page: { flex: 1, backgroundColor: theme.colors.background },
+    page: { flex: 1, backgroundColor: 'transparent' },
     loadingPage: {
       flex: 1,
-      backgroundColor: theme.colors.background,
+      backgroundColor: 'transparent',
       alignItems: 'center',
       justifyContent: 'center',
     },

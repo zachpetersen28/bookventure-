@@ -36,7 +36,6 @@ export type Theme = {
   isLight: boolean;
   colors: ThemeColors;
   // Full-screen art layered behind screen content. null = palette-only theme.
-  // All 20 themes are null for now — Stage 3 attaches the art-backed ones.
   backgroundImage: ImageSourcePropType | null;
 };
 
@@ -48,7 +47,7 @@ const cozyCabin: Theme = {
   id: 'cozy-cabin',
   name: 'Cozy Cabin',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/cozy-cabin.webp'),
   colors: {
     background: '#1A120C',
     surface: '#251A11',
@@ -80,7 +79,7 @@ const leatherWhiskey: Theme = {
   id: 'leather-whiskey',
   name: 'Leather & Whiskey',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/leather-whiskey.webp'),
   colors: {
     background: '#1C1210',
     surface: '#271A17',
@@ -112,7 +111,7 @@ const enchantedLibrary: Theme = {
   id: 'enchanted-library',
   name: 'Enchanted Library',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/enchanted-library.webp'),
   colors: {
     background: '#180F22',
     surface: '#22162E',
@@ -144,7 +143,7 @@ const celestial: Theme = {
   id: 'celestial',
   name: 'Celestial',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/celestial.webp'),
   colors: {
     background: '#0C1220',
     surface: '#131C2E',
@@ -176,7 +175,7 @@ const mountainExpedition: Theme = {
   id: 'mountain-expedition',
   name: 'Mountain Expedition',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/mountain-expedition.webp'),
   colors: {
     background: '#12181A',
     surface: '#1A2225',
@@ -208,7 +207,7 @@ const storm: Theme = {
   id: 'storm',
   name: 'Storm',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/storm.webp'),
   colors: {
     background: '#141A22',
     surface: '#1C242E',
@@ -240,7 +239,7 @@ const lakesideCampsite: Theme = {
   id: 'lakeside-campsite',
   name: 'Lakeside Campsite',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/lakeside-campsite.webp'),
   colors: {
     background: '#0F1826',
     surface: '#172233',
@@ -272,7 +271,7 @@ const wizardsTower: Theme = {
   id: 'wizards-tower',
   name: "Wizard's Tower",
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/wizards-tower.webp'),
   colors: {
     background: '#140E28',
     surface: '#1D1636',
@@ -306,7 +305,7 @@ const waterfallJungle: Theme = {
   id: 'waterfall-jungle',
   name: 'Waterfall Jungle',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/waterfall-jungle.webp'),
   colors: {
     background: '#0E1A14',
     surface: '#15251C',
@@ -338,7 +337,7 @@ const winterCampfire: Theme = {
   id: 'winter-campfire',
   name: 'Winter Campfire',
   isLight: false,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/winter-campfire.webp'),
   colors: {
     background: '#141A1E',
     surface: '#1C242A',
@@ -374,7 +373,7 @@ const wildflowerMeadow: Theme = {
   id: 'wildflower-meadow',
   name: 'Wildflower Meadow',
   isLight: true,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/wildflower-meadow.webp'),
   colors: {
     background: '#F7F0E8',
     surface: '#EFE4D6',
@@ -406,7 +405,7 @@ const goldenMeadow: Theme = {
   id: 'golden-meadow',
   name: 'Golden Meadow',
   isLight: true,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/golden-meadow.webp'),
   colors: {
     background: '#F8F1DE',
     surface: '#F0E4C6',
@@ -438,7 +437,7 @@ const coastal: Theme = {
   id: 'coastal',
   name: 'Coastal',
   isLight: true,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/coastal.webp'),
   colors: {
     background: '#EEF3F5',
     surface: '#E0E9EC',
@@ -470,7 +469,7 @@ const mistyRiver: Theme = {
   id: 'misty-river',
   name: 'Misty River',
   isLight: true,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/misty-river.webp'),
   colors: {
     background: '#EEF0EA',
     surface: '#E2E6DC',
@@ -502,7 +501,7 @@ const autumnForest: Theme = {
   id: 'autumn-forest',
   name: 'Autumn Forest',
   isLight: true,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/autumn-forest.webp'),
   colors: {
     background: '#F8EFE2',
     surface: '#F0E2CC',
@@ -534,7 +533,7 @@ const tropicalSunset: Theme = {
   id: 'tropical-sunset',
   name: 'Tropical Sunset',
   isLight: true,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/tropical-sunset.webp'),
   colors: {
     background: '#FCEFE2',
     surface: '#F6E0CC',
@@ -566,7 +565,7 @@ const golfCourseDawn: Theme = {
   id: 'golf-course-dawn',
   name: 'Golf Course Dawn',
   isLight: true,
-  backgroundImage: null,
+  backgroundImage: require('../assets/themes/golf-course-dawn.webp'),
   colors: {
     background: '#F0F3E6',
     surface: '#E4E9D4',

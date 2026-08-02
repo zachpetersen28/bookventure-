@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../../components/ScreenHeader';
+import ThemedBackground from '../../components/ThemedBackground';
 import { useTheme } from '../../lib/theme-context';
 import { Theme } from '../../lib/themes';
 
@@ -278,20 +279,23 @@ export default function DiscoverScreen() {
 
   if (!fontsLoaded) {
     return (
-      <View
-        style={
-          styles.loadingContainer
-        }
-      >
-        <ActivityIndicator
-          size="large"
-          color={theme.colors.gold}
-        />
-      </View>
+      <ThemedBackground>
+        <View
+          style={
+            styles.loadingContainer
+          }
+        >
+          <ActivityIndicator
+            size="large"
+            color={theme.colors.gold}
+          />
+        </View>
+      </ThemedBackground>
     );
   }
 
   return (
+    <ThemedBackground>
     <SafeAreaView
       style={styles.page}
       edges={['top']}
@@ -529,6 +533,7 @@ export default function DiscoverScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </ThemedBackground>
   );
 }
 
@@ -536,8 +541,7 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor:
-      theme.colors.background,
+    backgroundColor: 'transparent',
   },
 
   keyboardView: {
@@ -556,8 +560,7 @@ const getStyles = (theme: Theme) =>
 
   loadingContainer: {
     flex: 1,
-    backgroundColor:
-      theme.colors.background,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },

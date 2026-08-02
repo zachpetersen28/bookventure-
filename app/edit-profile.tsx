@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AVATARS } from '../lib/avatars';
 import ScreenHeader from '../components/ScreenHeader';
+import ThemedBackground from '../components/ThemedBackground';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme-context';
 import { Theme } from '../lib/themes';
@@ -179,19 +180,21 @@ export default function EditProfileScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView
-        style={styles.loadingPage}
-      >
-        <ActivityIndicator
-          size="large"
-          color={theme.colors.gold}
-        />
-      </SafeAreaView>
+      <ThemedBackground>
+        <SafeAreaView
+          style={styles.loadingPage}
+        >
+          <ActivityIndicator
+            size="large"
+            color={theme.colors.gold}
+          />
+        </SafeAreaView>
+      </ThemedBackground>
     );
   }
 
   return (
-    <>
+    <ThemedBackground>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -417,7 +420,7 @@ export default function EditProfileScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </ThemedBackground>
   );
 }
 
@@ -425,8 +428,7 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor:
-      theme.colors.background,
+    backgroundColor: 'transparent',
   },
 
   loadingPage: {
@@ -434,8 +436,7 @@ const getStyles = (theme: Theme) =>
     justifyContent:
       'center',
     alignItems: 'center',
-    backgroundColor:
-      theme.colors.background,
+    backgroundColor: 'transparent',
   },
 
   content: {

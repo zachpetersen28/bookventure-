@@ -17,6 +17,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calendar } from 'react-native-calendars';
 import ScreenHeader from '../components/ScreenHeader';
+import ThemedBackground from '../components/ThemedBackground';
 import { supabase } from '../lib/supabase';
 import { FONTS } from '../lib/theme';
 import { useTheme } from '../lib/theme-context';
@@ -390,6 +391,7 @@ export default function CreateClubScreen() {
   const schedule = calculateSchedule();
 
   return (
+    <ThemedBackground>
     <SafeAreaView style={styles.page} edges={['top']}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -700,12 +702,13 @@ export default function CreateClubScreen() {
         </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </ThemedBackground>
   );
 }
 
 const getStyles = (theme) =>
   StyleSheet.create({
-  page: { flex: 1, backgroundColor: theme.colors.background },
+  page: { flex: 1, backgroundColor: 'transparent' },
   keyboardView: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },

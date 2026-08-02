@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
+import ThemedBackground from '../components/ThemedBackground';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme-context';
 
@@ -182,13 +183,16 @@ export default function ClubsScreen() {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={theme.colors.gold} />
-      </View>
+      <ThemedBackground>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.colors.gold} />
+        </View>
+      </ThemedBackground>
     );
   }
 
   return (
+    <ThemedBackground>
     <SafeAreaView style={styles.page} edges={['top']}>
       <ScrollView
         style={styles.container}
@@ -307,6 +311,7 @@ export default function ClubsScreen() {
         })}
       </ScrollView>
     </SafeAreaView>
+    </ThemedBackground>
   );
 }
 
@@ -314,7 +319,7 @@ const getStyles = (theme) =>
   StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'transparent',
   },
 
   container: {
@@ -329,7 +334,7 @@ const getStyles = (theme) =>
 
   loadingContainer: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
+import ThemedBackground from '../components/ThemedBackground';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme-context';
 
@@ -246,14 +247,17 @@ export default function JoinClubScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.loadingPage} edges={['top']}>
-        <ActivityIndicator size="large" color={theme.colors.gold} />
-        <Text style={styles.loadingText}>Loading clubs...</Text>
-      </SafeAreaView>
+      <ThemedBackground>
+        <SafeAreaView style={styles.loadingPage} edges={['top']}>
+          <ActivityIndicator size="large" color={theme.colors.gold} />
+          <Text style={styles.loadingText}>Loading clubs...</Text>
+        </SafeAreaView>
+      </ThemedBackground>
     );
   }
 
   return (
+    <ThemedBackground>
     <SafeAreaView style={styles.page} edges={['top']}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -402,18 +406,19 @@ export default function JoinClubScreen() {
         </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </ThemedBackground>
   );
 }
 
 const getStyles = (theme) =>
   StyleSheet.create({
-  page: { flex: 1, backgroundColor: theme.colors.background },
+  page: { flex: 1, backgroundColor: 'transparent' },
   keyboardView: { flex: 1 },
   container: { flex: 1 },
   content: { padding: 20, paddingBottom: 120 },
   loadingPage: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },
