@@ -15,6 +15,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -48,6 +49,20 @@ export default function ClubScreen() {
   const [activeTab, setActiveTab] = useState('book');
   const [selectedChat, setSelectedChat] = useState('main');
   const [messageInput, setMessageInput] = useState('');
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const showSub = Keyboard.addListener(showEvent, () => setKeyboardVisible(true));
+    const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardVisible(false));
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   const [bookSuggestion, setBookSuggestion] = useState('');
   const [manualBookTitle, setManualBookTitle] = useState('');
@@ -1505,7 +1520,7 @@ await loadMembers();
           </ScrollView>
         </View>
 
-        <View style={styles.messageInputRow}>
+        <View style={[styles.messageInputRow, !keyboardVisible && styles.messageInputRowClearance]}>
           <TextInput
             value={messageInput}
             onChangeText={setMessageInput}
@@ -2373,9 +2388,17 @@ const getStyles = (theme) =>
     flexDirection: 'row',
     gap: 8,
     marginTop: 8,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'transparent',
     paddingTop: 8,
     paddingBottom: 4,
+  },
+  // Reserves clearance for the persistent bottom tab bar, which sits
+  // outside this screen and never reacts to keyboard state. Only applied
+  // while the keyboard is hidden — once it's open, KeyboardAvoidingView's
+  // own padding already covers the tab bar, so stacking this on top would
+  // leave a dead gap between the input and the keyboard.
+  messageInputRowClearance: {
+    marginBottom: 120,
   },
   messageInput: {
     flex: 1,
