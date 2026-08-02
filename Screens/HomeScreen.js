@@ -566,13 +566,13 @@ const getStyles = (theme) =>
     },
     loadingText: { color: theme.colors.textSecondary, marginTop: 12, fontWeight: '800' },
     container: { flex: 1 },
-    content: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 120 },
+    content: { paddingHorizontal: 18, paddingTop: 4, paddingBottom: 120 },
 
     headerRow: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: 16,
+      marginBottom: 6,
     },
 
     brandTitle: {
@@ -594,6 +594,12 @@ const getStyles = (theme) =>
       width: 150,
       height: 150,
       marginLeft: 8,
+      // The source art isn't centered in its own canvas — the visible mark
+      // sits ~11% of the image height above center (measured directly from
+      // the PNG's alpha channel). Nudge the box down to compensate so the
+      // visible mark, not just its bounding box, lands centered against the
+      // title+subtitle block.
+      marginTop: 24,
     },
 
     readTodayCard: {
