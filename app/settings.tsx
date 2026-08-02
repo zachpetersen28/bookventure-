@@ -68,6 +68,11 @@ export default function SettingsScreen() {
               <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.row} onPress={() => router.push('/theme-picker')}>
+              <Text style={styles.rowText}>Appearance</Text>
+              <Text style={styles.arrow}>›</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.row}>
               <Text style={styles.rowText}>Notifications</Text>
               <Text style={styles.comingSoon}>Soon</Text>

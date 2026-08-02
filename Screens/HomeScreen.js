@@ -28,7 +28,7 @@ const FEATURED_CARD_WIDTH = SCREEN_WIDTH - 36;
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { theme, themeId, setThemeId, themes } = useTheme();
+  const { theme } = useTheme();
   const styles = useMemo(() => getStyles(theme), [theme]);
 
   const [profile, setProfile] = useState(null);
@@ -345,20 +345,6 @@ export default function HomeScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.colors.gold} />
         }
       >
-        {/* DEV ONLY — remove once the theme picker exists (Stage 4). Lets us
-            verify the theming pattern across all registered themes. */}
-        <View style={styles.devThemeRow}>
-          {themes.map((t) => (
-            <TouchableOpacity
-              key={t.id}
-              style={[styles.devThemeChip, t.id === themeId && styles.devThemeChipActive]}
-              onPress={() => setThemeId(t.id)}
-            >
-              <Text style={styles.devThemeChipText}>{t.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
         <View style={styles.headerRow}>
           <View style={{ flex: 1 }}>
             <Text style={styles.brandTitle} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
@@ -581,30 +567,6 @@ const getStyles = (theme) =>
     loadingText: { color: theme.colors.textSecondary, marginTop: 12, fontWeight: '800' },
     container: { flex: 1 },
     content: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 120 },
-
-    devThemeRow: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
-      marginBottom: 14,
-    },
-    devThemeChip: {
-      backgroundColor: theme.colors.surface,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      borderRadius: 999,
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-    },
-    devThemeChipActive: {
-      borderColor: theme.colors.gold,
-      backgroundColor: theme.colors.card,
-    },
-    devThemeChipText: {
-      color: theme.colors.textSecondary,
-      fontSize: 11,
-      fontWeight: '800',
-    },
 
     headerRow: {
       flexDirection: 'row',

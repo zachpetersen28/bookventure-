@@ -23,6 +23,7 @@ function RootLayoutContent() {
           <Stack.Screen name="edit-club" options={{ headerShown: false }} />
           <Stack.Screen name="test-supabase" options={{ headerShown: false }} />
           <Stack.Screen name="update-progress" options={{ headerShown: false }} />
+          <Stack.Screen name="theme-picker" options={{ headerShown: false }} />
         </Stack>
 
         {showTabBar && <BottomTabBar />}
